@@ -1,0 +1,439 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\utils\Utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\utils\Color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\utils\FileIO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\utils\Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\simulation\Sun.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\devices\Cursor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\devices\Keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\devices\Mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\devices\Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\math\Math.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\math\Matrix.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\math\Vector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\camera\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\camera\CameraController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\font\FontManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\font\Glyph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\gui\SpeedButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\gui\Text.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\models\BaseModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\models\DiscModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\models\SkyboxModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\models\SphereModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\shader\Shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\shader\ShaderProgram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\shader\ShaderRegistry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\wrappers\Buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\wrappers\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\wrappers\Texture3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\wrappers\VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\selection\MouseSelector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\simulation\Asteroid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\simulation\Earth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\simulation\Planet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\simulation\RingedPlanet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\simulation\Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\simulation\SolarSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\renderer\gui\GUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\utils\logging\ConsoleLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\utils\FileManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Res\textures\asteroid.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\font.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_pause.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_pause_hovered.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_pause_selected.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_1x.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_1x_hovered.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_1x_selected.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_2x.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_2x_hovered.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_2x_selected.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_3x.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_3x_hovered.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\gui\icon_speed_3x_selected.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\earth.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\earth_clouds.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\earth_night.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\earth_specular.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\jupiter.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\mars.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\mercury.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\moon.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\neptune.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\saturn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\saturn_rings.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\sun.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\uranus.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\planet\venus.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\test\back.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\test\bottom.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\test\front.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\test\left.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\test\right.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\test\top.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\universe\back.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\universe\bottom.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\universe\front.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\universe\left.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\universe\right.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\skybox\universe\top.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\cobblestone.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Res\textures\dirt.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\shaders\earth.frag" />
+    <None Include="Res\shaders\earth.vert" />
+    <None Include="Res\shaders\gui.frag" />
+    <None Include="Res\shaders\gui.vert" />
+    <None Include="Res\shaders\object.frag" />
+    <None Include="Res\shaders\object.vert" />
+    <None Include="Res\shaders\skybox.frag" />
+    <None Include="Res\shaders\skybox.vert" />
+    <None Include="Res\shaders\sun.frag" />
+    <None Include="Res\shaders\sun.vert" />
+    <None Include="Res\shaders\object - showcase.frag" />
+    <None Include="Res\shaders\object - showcase.vert" />
+    <None Include="Res\shaders\phong.frag" />
+    <None Include="Res\shaders\phong.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\opengl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\devices\Cursor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\devices\Keyboard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\devices\Mouse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\devices\Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\math\Math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\math\Matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\math\Vector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\camera\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\camera\CameraController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\font\FontManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\font\Glyph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\gui\SpeedButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\gui\Text.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\models\BaseModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\models\DiscModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\models\SkyboxModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\models\SphereModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\shader\Shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\shader\ShaderProgram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\shader\ShaderRegistry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\wrappers\Buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\wrappers\Texture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\wrappers\Texture3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\wrappers\VertexArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\selection\ISelectable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\selection\MouseSelector.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\simulation\Asteroid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\simulation\Earth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\simulation\Planet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\simulation\RingedPlanet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\simulation\Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\simulation\SolarSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\simulation\Sun.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\utils\Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\utils\FileIO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\utils\Image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\utils\Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\GLEW\include\GLEW\eglew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\GLEW\include\GLEW\glew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\GLEW\include\GLEW\glxew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\GLEW\include\GLEW\wglew.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\GLFW\include\GLFW\glfw3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\GLFW\include\GLFW\glfw3native.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependencies\STB_IMAGE\include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\renderer\gui\GUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\utils\logging\ILoggable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\utils\logging\ILogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\utils\logging\ConsoleLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\utils\FileManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="Dependencies\GLEW\glew32s.lib" />
+    <Library Include="Dependencies\GLFW\glfw3.lib" />
+  </ItemGroup>
+</Project>
