@@ -1,9 +1,14 @@
 #include "world/Chunk.h"
 
+#include "Options.h"
+#include "devices/Window.h"
 #include "math/PerlinNoiseGenerator.h"
 #include "renderer/models/BlockMesh.h"
 #include "world/Blocks.h"
 #include "world/World.h"
+#include "world/mesh/BasicChunkMeshBuilder.h"
+#include "world/mesh/PerChunkOptimizedChunkMeshBuilder.h"
+#include "world/mesh/OptimalChunkMeshBuilder.h"
 
 #include "world/utils/BlockRegistry.h"
 
@@ -11,9 +16,9 @@ Chunk::Chunk(const Vector& position, World* world, unsigned char* blocks) :
 	position({ position.x, position.y, position.z, 0 }),
 	world(world),
 	blocks(blocks),
-	isDirty(false)
+	dirty(false)
 {
-	generateMesh();
+	updateChunkMesh(std::move(generateMesh()), false);
 }
 
 Chunk::Chunk(Chunk&& other) noexcept
@@ -37,77 +42,21 @@ Chunk::~Chunk()
 	delete[] blocks;
 }
 
-void Chunk::generateMesh()
+ChunkMesh Chunk::generateMesh()
 {
-	BlockRegistry& blockRegistry = BlockRegistry::GetInstance();
-
-	for (int x = 0; x < CHUNK_SIZE; x++)
+	switch (CHUNK_MESH_BUILDING_STRATEGY)
 	{
-		for (int y = 0; y < CHUNK_SIZE; y++)
-		{
-			for (int z = 0; z < CHUNK_SIZE; z++)
-			{
-				unsigned char currentBlockID = blocks[x * 16 * 16 + z * 16 + y];
-				if (currentBlockID == 0) continue;
-
-				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
-				Mesh& mesh = currentBlock.opacity == BlockOpacity::OPAQUE ? this->mesh : transparentMesh;
-
-				// BOTTOM FACE
-				if (auto blockID = getBlockAt(x, y - 1, z))
-				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
-					{
-						mesh.addMesh(currentBlock.mesh.getBottomFace({ x, y, z }));
-					}
-				}
-				
-				// TOP FACE
-				if (auto blockID = getBlockAt(x, y + 1, z))
-				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
-					{
-						mesh.addMesh(currentBlock.mesh.getTopFace({ x, y, z }));
-					}
-				}
-
-				// NORTH FACE
-				if (auto blockID = getBlockAt(x, y, z - 1))
-				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
-					{
-						mesh.addMesh(currentBlock.mesh.getNorthFace({ x, y, z }));
-					}
-				}
-
-				// SOUTH FACE
-				if (auto blockID = getBlockAt(x, y, z + 1))
-				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
-					{
-						mesh.addMesh(currentBlock.mesh.getSouthFace({ x, y, z }));
-					}
-				}
-
-				// WEST FACE
-				if (auto blockID = getBlockAt(x - 1, y, z))
-				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
-					{
-						mesh.addMesh(currentBlock.mesh.getWestFace({ x, y, z }));
-					}
-				}
-
-				// EAST FACE
-				if (auto blockID = getBlockAt(x + 1, y, z))
-				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
-					{
-						mesh.addMesh(currentBlock.mesh.getEastFace({ x, y, z }));
-					}
-				}
-			}
-		}
+	case BASIC_CHUNK_MESH_BULDING_STRATEGY:
+		return std::move(BasicChunkMeshBuilder::GetInstance().generateMesh(this));
+		break;
+	case PER_CHUNK_OPTIMIZED_CHUNK_MESH_BUILDING_STRATEGY:
+		return std::move(PerChunkOptimizedChunkMeshBuilder::GetInstance().generateMesh(this));
+		break;
+	case OPTIMAL_CHUNK_MESH_BUILDING_STRATEGY:
+		return std::move(OptimalChunkMeshBuilder::GetInstance().generateMesh(this));
+		break;
+	default:
+		exit(69);
 	}
 }
 
@@ -115,6 +64,51 @@ void Chunk::generateBuffers()
 {
 	mesh.generateBuffers();
 	transparentMesh.generateBuffers();
+	waterMesh.generateBuffers();
+}
+
+bool Chunk::isVisible(const Camera& camera) const
+{
+	//return true;
+	Matrix chunkTranslationMatrix = Matrix::GetTranslation(position);
+	Matrix chunkMatrix = camera.getProjectionMatrix() * camera.getViewMatrix() * chunkTranslationMatrix;
+	
+	int horizontalCoordinates[] = { 0, CHUNK_WIDTH };
+	constexpr float threshold = 1.1;
+
+	for (int x = 0; x < 2; x++)
+	{
+		for (int z = 0; z < 2; z++)
+		{
+			for (int y = 0; y <= CHUNK_HEIGHT; y += CHUNK_WIDTH)
+			{
+				Vector transformedCorner = chunkMatrix * Vector(x, y, z);
+				Vector normalizedCorner = transformedCorner / transformedCorner.w;
+
+				if (normalizedCorner.x >= -threshold && normalizedCorner.x <= threshold &&
+					normalizedCorner.y >= -threshold && normalizedCorner.y <= threshold &&
+					normalizedCorner.z >= -threshold && normalizedCorner.z <= threshold) {
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+void Chunk::updateChunkMesh(ChunkMesh&& chunkMesh, bool shouldGenerateBuffers)
+{
+	mesh = std::move(chunkMesh.solidMesh);
+	transparentMesh = std::move(chunkMesh.transparentMesh);
+	waterMesh = std::move(chunkMesh.waterMesh);
+
+	if (shouldGenerateBuffers)
+	{
+		mesh.generateBuffers();
+		transparentMesh.generateBuffers();
+		waterMesh.generateBuffers();
+	}
 }
 
 void Chunk::render() const
@@ -127,19 +121,9 @@ void Chunk::renderTransparent() const
 	transparentMesh.render();
 }
 
-bool Chunk::shouldRenderSide(const Block& block, const Block& neighbouringBlock) const
+void Chunk::renderWater() const
 {
-	switch (block.opacity)
-	{
-	case BlockOpacity::OPAQUE:
-		return neighbouringBlock.opacity != BlockOpacity::OPAQUE;
-	case BlockOpacity::SEE_THROUGH:
-		return (block != neighbouringBlock) && ((neighbouringBlock.opacity == BlockOpacity::TRANSPARENT) || (neighbouringBlock.opacity == BlockOpacity::EMPTY));
-	case BlockOpacity::TRANSPARENT:
-		return (block != neighbouringBlock) && (neighbouringBlock.opacity == BlockOpacity::EMPTY);
-	default:
-		return false;
-	}
+	waterMesh.render();
 }
 
 Vector Chunk::getPosition() const
@@ -159,10 +143,45 @@ bool Chunk::containsPosition(int x, int y, int z) const
 
 std::optional<unsigned char> Chunk::getBlockAt(int x, int y, int z) const
 {
-	if (x < 0 || y < 0 || z < 0 || x >= CHUNK_SIZE || y >= CHUNK_SIZE || z >= CHUNK_SIZE)
+	if (x < 0 || y < 0 || z < 0 || x >= CHUNK_WIDTH || y >= CHUNK_HEIGHT || z >= CHUNK_WIDTH)
 	{
 		return BLOCK_AIR;// world->getBlockAt(position.x + x, position.y + y, position.z + z);
 	}
 
-	return blocks[x * 16 * 16 + z * 16 + y];
+	return blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z];
+}
+
+void Chunk::setBlock(const Vector& position, const Block& block)
+{
+	setBlock(position, block.id);
+}
+
+void Chunk::setBlock(const Vector& position, unsigned char block)
+{
+	if (position.x < 0 || position.y < 0 || position.z < 0 || position.x >= CHUNK_WIDTH || position.y >= CHUNK_HEIGHT || position.z >= CHUNK_WIDTH)
+	{
+		throw "What the hell";
+	}
+
+	blocks[int(position.y) * CHUNK_WIDTH * CHUNK_WIDTH + int(position.x) * CHUNK_WIDTH + int(position.z)] = block;
+}
+
+bool Chunk::isDirty() const
+{
+	return dirty;
+}
+
+void Chunk::markDirty(bool isDirty)
+{
+	this->dirty = isDirty;
+}
+
+std::vector<Vector> Chunk::getNeighbouringPositions() const
+{
+	return {
+		position.goNorth(16),
+		position.goSouth(16),
+		position.goEast(16),
+		position.goWest(16)
+	};
 }

@@ -17,19 +17,27 @@ public:
 	Vector operator-(const Vector& other) const;
 	Vector operator*(float constant) const;
 	Vector operator/(float constant) const;
+	Vector operator%(float constant) const;
 
 	Vector& operator+=(const Vector& other);
 	Vector& operator-=(const Vector& other);
 	Vector& operator*=(float constant);
 	Vector& operator/=(float constant);
+	Vector& operator%=(float constant);
 
 	bool operator==(const Vector& other) const;
+	bool operator<(const Vector& other) const;
 
 	float distanceTo(const Vector& other) const;
 	float distanceTo2(const Vector& other) const;
 
 	float length() const;
 	float length2() const;
+
+	Vector goNorth(float n = 1) const;
+	Vector goSouth(float n = 1) const;
+	Vector goWest(float n = 1) const;
+	Vector goEast(float n = 1) const;
 
 	void normalize();
 
@@ -44,6 +52,9 @@ public:
 	static Vector west();
 	static Vector FromPolar(float radius, float yaw, float pitch);
 	static Vector CreateRandom(float min, float max);
+
+	static Vector GlobalToChunk(const Vector& globalPosition);
+	static Vector GlobalToLocal(const Vector& globalPosition);
 };
 
 std::ostream& operator<<(std::ostream& outputStream, const Vector& vector);

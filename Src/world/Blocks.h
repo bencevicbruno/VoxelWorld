@@ -8,3 +8,5 @@
 #define BLOCK_WATER 5
 #define BLOCK_WATER_SURFACE 6
 #define BLOCK_SNOW 7
+#define BLOCK_OAK_LOG 8
+#define BLOCK_OAK_LEAVES 9

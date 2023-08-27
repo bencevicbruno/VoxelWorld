@@ -8,36 +8,54 @@ BiomeNoiseTerrainGenerator::BiomeNoiseTerrainGenerator(unsigned int seed) :
 	noiseGenerator(PerlinNoiseGenerator(seed, 0.01))
 {}
 
-unsigned char* BiomeNoiseTerrainGenerator::generateTerrain(unsigned int seed, const Vector& position) const
+unsigned char* BiomeNoiseTerrainGenerator::generateTerrain(unsigned int seed, const Vector& position, const std::unordered_map<Vector, unsigned char>& pendingBlocks) const
 {
-	if (position.y >= 16)
-	{
-		return (unsigned char*) calloc(CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE, sizeof(unsigned char));
-	}
+	PerlinNoiseGenerator decorationsNoiseGenerator(seed * 0.1, 1);
 
-	unsigned char* blocks = new unsigned char[CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE];
+	unsigned char* blocks = new unsigned char[CHUNK_WIDTH * CHUNK_WIDTH * CHUNK_HEIGHT];
 
-	for (int x = 0; x < CHUNK_SIZE; x++)
+	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
-		for (int z = 0; z < CHUNK_SIZE; z++)
+		for (int z = 0; z < CHUNK_WIDTH; z++)
 		{
-			for (int y = 0; y < CHUNK_SIZE; y++)
-			{
-				int globalX = position.x + x;
-				int globalZ = position.z + z;
+			int globalX = position.x + x;
+			int globalZ = position.z + z;
 
-				double value = noiseGenerator.get(globalX, globalZ);
-				int coordinates = x * 16 * 16 + z * 16 + y;
-
-				if (value >= 0.5 && value <= 0.6) {
-					blocks[coordinates] = BLOCK_WATER;
-				}
-				else {
-					blocks[coordinates] = BLOCK_GRASS;
-				}
+			double value = noiseGenerator.get01(globalX, globalZ);
+			int coordinates = 0 * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z;
+			//std::cout << value << std::endl;
+			if (value >= 0.5 && value <= 0.6) {
+				blocks[coordinates] = BLOCK_SAND;
 			}
+			else {
+				blocks[coordinates] = BLOCK_STONE;
+			}
+
+			if (decorationsNoiseGenerator.get01(globalX, globalZ) > 0.7 && (((x + z) % 11) == 0))
+			{
+				blocks[coordinates] = BLOCK_GRASS;
+			}
+
 		}
 	}
 
+	for (auto& [position, blockID] : pendingBlocks)
+	{
+		blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
+	}
+
 	return blocks;
+}
+
+int BiomeNoiseTerrainGenerator::getHeight(int x, int z) const
+{
+	return 0;
+}
+
+void BiomeNoiseTerrainGenerator::spawnTree(int x, int z)
+{
+	for (int y = 1; y <= 5; y++)
+	{
+		
+	}
 }

@@ -19,7 +19,7 @@ public:
 
 	void generateBuffers();
 	void render() const;
-
+	void clear();
 private:
 	std::vector<MeshVertex> vertices;
 	std::vector<unsigned int> indices;

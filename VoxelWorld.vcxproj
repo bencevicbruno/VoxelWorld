@@ -203,6 +203,7 @@
     <ClCompile Include="Src\simulation\SolarSystem.cpp" />
     <ClCompile Include="Src\simulation\Sun.cpp" />
     <ClCompile Include="Src\utils\Color.cpp" />
+    <ClCompile Include="Src\utils\debug\Debug.cpp" />
     <ClCompile Include="Src\utils\FileIO.cpp" />
     <ClCompile Include="Src\utils\file\FileManager.cpp" />
     <ClCompile Include="Src\utils\file\FileManagerException.cpp" />
@@ -212,6 +213,12 @@
     <ClCompile Include="Src\utils\log\ConsoleLogger.cpp" />
     <ClCompile Include="Src\utils\Utils.cpp" />
     <ClCompile Include="Src\world\Chunk.cpp" />
+    <ClCompile Include="Src\world\ChunkMesh.cpp" />
+    <ClCompile Include="Src\world\decoration\OakTreeWorldDecoration.cpp" />
+    <ClCompile Include="Src\world\decoration\WorldDecoration.cpp" />
+    <ClCompile Include="Src\world\mesh\BasicChunkMeshBuilder.cpp" />
+    <ClCompile Include="Src\world\mesh\OptimalChunkMeshBuilder.cpp" />
+    <ClCompile Include="Src\world\mesh\PerChunkOptimizedChunkMeshBuilder.cpp" />
     <ClCompile Include="Src\world\terrain\BiomeNoiseTerrainGenerator.cpp" />
     <ClCompile Include="Src\world\terrain\FirstWorkingTerrainGenerator.cpp" />
     <ClCompile Include="Src\world\terrain\MinecraftTerrainGenerator.cpp" />
@@ -302,6 +309,7 @@
     <ClInclude Include="Src\math\PerlinNoiseGenerator.h" />
     <ClInclude Include="Src\math\Vector.h" />
     <ClInclude Include="Src\opengl.h" />
+    <ClInclude Include="Src\Options.h" />
     <ClInclude Include="Src\renderer\camera\Camera.h" />
     <ClInclude Include="Src\renderer\camera\CameraController.h" />
     <ClInclude Include="Src\renderer\font\FontManager.h" />
@@ -335,8 +343,10 @@
     <ClInclude Include="Src\simulation\SolarSystem.h" />
     <ClInclude Include="Src\simulation\Sun.h" />
     <ClInclude Include="Src\utils\atomics\AtomicMap.h" />
+    <ClInclude Include="Src\utils\atomics\AtomicSet.h" />
     <ClInclude Include="Src\utils\atomics\AtomicVector.h" />
     <ClInclude Include="Src\utils\Color.h" />
+    <ClInclude Include="Src\utils\debug\Debug.h" />
     <ClInclude Include="Src\utils\FileIO.h" />
     <ClInclude Include="Src\utils\file\FileManager.h" />
     <ClInclude Include="Src\utils\file\FileManagerException.h" />
@@ -349,6 +359,12 @@
     <ClInclude Include="Src\utils\Utils.h" />
     <ClInclude Include="Src\world\Blocks.h" />
     <ClInclude Include="Src\world\Chunk.h" />
+    <ClInclude Include="Src\world\ChunkMesh.h" />
+    <ClInclude Include="Src\world\decoration\OakTreeWorldDecoration.h" />
+    <ClInclude Include="Src\world\mesh\BasicChunkMeshBuilder.h" />
+    <ClInclude Include="Src\world\mesh\ChunkMeshBuilder.h" />
+    <ClInclude Include="Src\world\mesh\OptimalChunkMeshBuilder.h" />
+    <ClInclude Include="Src\world\mesh\PerChunkOptimizedChunkMeshBuilder.h" />
     <ClInclude Include="Src\world\terrain\BiomeNoiseTerrainGenerator.h" />
     <ClInclude Include="Src\world\terrain\FirstWorkingTerrainGenerator.h" />
     <ClInclude Include="Src\world\terrain\MinecraftTerrainGenerator.h" />
@@ -356,6 +372,7 @@
     <ClInclude Include="Src\world\utils\BlockRegistry.h" />
     <ClInclude Include="Src\world\utils\BlockRegistryException.h" />
     <ClInclude Include="Src\world\World.h" />
+    <ClInclude Include="Src\world\decoration\WorldDecoration.h" />
     <ClInclude Include="Src\world\WorldGenerator.h" />
     <ClInclude Include="Src\_tests\FileManagerTests.h" />
     <ClInclude Include="Src\_tests\ImageManagerTests.h" />

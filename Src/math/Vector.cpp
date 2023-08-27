@@ -54,6 +54,11 @@ Vector Vector::operator/(float constant) const
 	return Vector(x / constant, y / constant, z / constant, w / constant);
 }
 
+Vector Vector::operator%(float constant) const
+{
+	return Vector(std::fmod(x, constant), std::fmod(y, constant), std::fmod(z, constant), std::fmod(w, constant));
+}
+
 Vector& Vector::operator+=(const Vector& other)
 {
 	x += other.x;
@@ -94,9 +99,28 @@ Vector& Vector::operator/=(float constant)
 	return *this;
 }
 
+Vector& Vector::operator%=(float constant)
+{
+	x = std::fmod(x, constant);
+	y = std::fmod(y, constant);
+	z = std::fmod(z, constant);
+	w = std::fmod(w, constant);
+
+	return *this;
+}
+
 bool Vector::operator==(const Vector& other) const
 {
 	return (x == other.x) && (y == other.y) && (z == other.z) && (w == other.w);
+}
+
+bool Vector::operator<(const Vector& other) const
+{
+	if (x != other.x) return x < other.x;
+	if (y != other.y) return y < other.y;
+	if (z != other.z) return z < other.z;
+
+	return w < other.w;
 }
 
 float Vector::distanceTo(const Vector& other) const
@@ -117,6 +141,26 @@ float Vector::length() const
 float Vector::length2() const
 {
 	return x * x + y * y + z * z + w * w;
+}
+
+Vector Vector::goNorth(float n) const
+{
+	return { x, y, z - n };
+}
+
+Vector Vector::goSouth(float n) const
+{
+	return { x, y, z + n };
+}
+
+Vector Vector::goWest(float n) const
+{
+	return { x - n, y, z };
+}
+
+Vector Vector::goEast(float n) const
+{
+	return { x + n, y, z };
 }
 
 void Vector::normalize()
@@ -188,6 +232,22 @@ Vector Vector::CreateRandom(float min, float max)
 	float z = Math::CreateRandom(min, max);
 
 	return Vector(x, y, z, 0.0);
+}
+
+Vector Vector::GlobalToChunk(const Vector& globalPosition)
+{
+	bool isXNegative = globalPosition.x < 0;
+	bool isZNegative = globalPosition.z < 0;
+
+	int chunkX = isXNegative ? (- int(abs(globalPosition.x) - 1) / 16 - 1) : (int(globalPosition.x) / 16);
+	int chunkZ = isZNegative ? (- int(abs(globalPosition.z) - 1) / 16 - 1) : (int(globalPosition.z) / 16);
+
+	return Vector(chunkX, 0, chunkZ);
+}
+
+Vector Vector::GlobalToLocal(const Vector& globalPosition)
+{
+	return { std::fmod(globalPosition.x, 16.0f), globalPosition.y, std::fmod(globalPosition.z, 16.0f), 0.0f };
 }
 
 std::ostream& operator<<(std::ostream& outputStream, const Vector& vector)

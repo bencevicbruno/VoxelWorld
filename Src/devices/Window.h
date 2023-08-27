@@ -14,6 +14,7 @@ public:
 	static Window& GetInstance();
 
 	std::string getTitle() const;
+	void setTitle(const std::string& newTitle);
 	bool isRunning() const;
 	bool hasCursor() const;
 

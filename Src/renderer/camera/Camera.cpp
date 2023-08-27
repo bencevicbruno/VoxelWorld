@@ -21,7 +21,7 @@ const Camera& Camera::getActiveCamera()
 
 Camera::Camera():
 	position({0, 128, 0, 0}),
-	yaw(90), pitch(-45),
+	yaw(180), pitch(-45),
 	fov(90.0f), // BACK TO 80.0F
 	controller(CameraController(this, 0.01f, 0.5f, 0.1f))
 {

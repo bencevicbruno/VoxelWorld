@@ -22,6 +22,7 @@ OctaveNoiseGenerator::OctaveNoiseGenerator(unsigned int octaves, double persiste
 	this->octaves = octaves;
 	this->persistence = persistence;
 	this->perlinNoise = siv::PerlinNoise(randomSeed);
+	this->perlinNoise.reseed(this->seed);
 }
 
 OctaveNoiseGenerator::OctaveNoiseGenerator(unsigned int seed, unsigned int octaves, double persistence, double constant) :

@@ -23,6 +23,8 @@
 
 #include "renderer/models/BlockMesh.h"
 
+#include <chrono>
+
 void initBlockRegistry();
 
 int main()
@@ -50,13 +52,15 @@ int main()
 	ShaderProgramRegistry::GetInstance().loadShader("skybox");
 
 	Skybox skybox(Color::CreateFromRGB(173, 216, 230));
-	World world(0, camera.getPosition());
+	World world(8, 8);
 
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	auto last_time = std::chrono::high_resolution_clock::now();
 	while (!window.shouldClose())
 	{
 		window.update();
@@ -70,8 +74,11 @@ int main()
 
 		//solarSystem.render();
 
+		last_time = std::chrono::high_resolution_clock::now();
 		skybox.render();
 		world.render();
+		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - last_time);
+		window.setTitle("Vertex World " + std::to_string(duration.count()) + "ms");
 	}
 
 	return 0;
@@ -88,4 +95,6 @@ void initBlockRegistry()
 	registry.registerBlock(BLOCK_WATER, BlockMesh(UVPosition::FromAtlas(4, 0)), BlockOpacity::TRANSPARENT);
 	registry.registerBlock(BLOCK_WATER_SURFACE, BlockMesh(UVPosition::FromAtlas(4, 0), Box(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f - 2.0f/16.0f, 0.5f)), BlockOpacity::TRANSPARENT);
 	registry.registerBlock(BLOCK_SNOW, BlockMesh(UVPosition::FromAtlas(5, 0)), BlockOpacity::OPAQUE);
+	registry.registerBlock(BLOCK_OAK_LOG, BlockMesh(UVPosition::FromAtlas(8, 0), UVPosition::FromAtlas(7, 0)), BlockOpacity::OPAQUE);
+	registry.registerBlock(BLOCK_OAK_LEAVES, BlockMesh(UVPosition::FromAtlas(9, 0)), BlockOpacity::SEE_THROUGH);
 }

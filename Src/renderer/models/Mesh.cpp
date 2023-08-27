@@ -30,6 +30,7 @@ void Mesh::addMesh(const Mesh& otherMesh)
 {
 	const unsigned int verticesCount = vertices.size();
 
+
 	vertices.insert(vertices.end(), otherMesh.vertices.begin(), otherMesh.vertices.end());
 
 
@@ -51,6 +52,7 @@ void Mesh::generateBuffers()
 	indexBuffer.bind();
 
 	vertexArray.setupAttributeData();
+	clear();
 }
 
 void Mesh::render() const
@@ -60,4 +62,10 @@ void Mesh::render() const
 	indexBuffer.bind();
 
 	glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, 0);
+}
+
+void Mesh::clear()
+{
+	vertices.clear();
+	indices.clear();
 }

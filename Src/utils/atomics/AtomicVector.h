@@ -28,11 +28,25 @@ public:
 		this->vector.insert(this->vector.end(), vector.begin(), vector.end());
 	}
 
+	template <typename = std::enable_if_t<!std::is_pointer_v<T>>>
 	std::optional<T> popLast()
 	{
 		std::lock_guard<std::mutex> guard(accessMutex);
 
 		if (vector.empty()) return {};
+
+		T lastElement = this->vector.back();
+		this->vector.pop_back();
+
+		return lastElement;
+	}
+
+	template <typename = std::enable_if_t<std::is_pointer_v<T>>>
+	T popLast()
+	{
+		std::lock_guard<std::mutex> guard(accessMutex);
+
+		if (vector.empty()) return nullptr;
 
 		T lastElement = this->vector.back();
 		this->vector.pop_back();

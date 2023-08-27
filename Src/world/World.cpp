@@ -1,27 +1,36 @@
 #include "world/World.h"
 
+#include "Options.h"
+
 #include <stdio.h>
 
 #include "math/Math.h"
 #include "renderer/camera/Camera.h"
 #include "renderer/shader/ShaderProgramRegistry.h"
 #include "utils/image/ImageManager.h"
+#include "world/ChunkMesh.h"
+#include "world/Chunk.h"
 #include "renderer/models/BlockMesh.h"
 
 World::World() :
-	World(0, {})
-{}
-
-World::World(unsigned int seed, const Vector& initialCameraPosition) :
-	seed(seed),
-	prevCameraX(initialCameraPosition.x), prevCameraY(initialCameraPosition.y), prevCameraZ(initialCameraPosition.z),
-	renderRadius(4),
+	renderRadius(8),
 	textureAtlas(Texture::CreateFromImage("atlas.png")),
-	worldGenerator({this})
+	worldGenerator({ this }),
+	time(0)
+{
+	std::srand((unsigned int)std::time(NULL));
+	this->seed = (unsigned int)rand();
+}
+
+World::World(unsigned int seed, int renderRadius) :
+	seed(seed),
+	renderRadius(renderRadius),
+	textureAtlas(Texture::CreateFromImage("atlas.png")),
+	worldGenerator({this}),
+	time(0)
 {
 	textureAtlas.setWrapAndFilterForGUI();
-	loadedPositions = getChunkPositionsForPosition({ float(prevCameraX), float(prevCameraY), float(prevCameraZ)});
-	worldGenerator.requestChunks(loadedPositions, {prevCameraX, prevCameraY, prevCameraZ});
+	worldGenerator.requestChunks(getChunkPositionsToLoad());
 }
 
 World::~World()
@@ -39,45 +48,89 @@ unsigned int World::getSeed() const
 
 void World::addChunk(Chunk* chunk)
 {
-	chunksToAdd.append(chunk);
+	pendingChunks.append(chunk);
+}
+
+void World::addChunks(const std::vector<Chunk*>& chunks)
+{
+	pendingChunks.append(chunks);
+}
+
+void World::cleanChunk(Chunk* chunk, ChunkMesh&& chunkMesh)
+{
+	cleanChunks.set(chunk, std::move(chunkMesh));
 }
 
 void World::update(const Vector& cameraPosition)
 {
-	int cameraX = int(cameraPosition.x) / 16;
-	int cameraY = int(cameraPosition.y) / 16;
-	int cameraZ = int(cameraPosition.z) / 16;
+	addPendingChunks();
 
-	chunksToAdd.perform([this](std::vector<Chunk*>& chunks) -> void
+	cleanChunks.perform([this](auto& cleanChunks) -> void
 		{
-			for (Chunk* chunk : chunks)
+			for (auto& [chunk, newMesh] : cleanChunks)
+			{
+				chunk->updateChunkMesh(std::move(newMesh), true);
+			}
+
+			cleanChunks.clear();
+		});
+	
+	for (auto& [position, blocks] : pendingBlocks)
+	{
+		if (blocks.empty()) continue;
+
+		if (Chunk* chunk = getChunkAt(position))
+		{
+			for (auto& [blockPosition, block] : blocks)
+			{
+				chunk->setBlock(blockPosition, block);
+			}
+
+			chunk->markDirty(true);
+		}
+
+		blocks.clear();
+	}
+
+	handleDirtyChunks();
+	time += 0.01;
+}
+
+void World::addPendingChunks()
+{
+	pendingChunks.perform([this](std::vector<Chunk*>& pendingChunks) -> void
+		{
+			for (Chunk* chunk : pendingChunks)
 			{
 				chunk->generateBuffers();
 				this->chunks[chunk->getPosition()] = chunk;
+
+				for (const Vector& position : chunk->getNeighbouringPositions())
+				{
+					if (Chunk* neighbourChunk = this->getChunkAt(position))
+					{
+						neighbourChunk->markDirty(true);
+					}
+				}
 			}
 
-			chunks.clear();
+			pendingChunks.clear();
 		});
+}
 
-	if (cameraX != prevCameraX || cameraZ != prevCameraZ)// || cameraY != prevCameraY)
+void World::handleDirtyChunks()
+{
+	std::set<Chunk*> dirtyChunks;
+
+	for (const auto& [position, chunk] : chunks)
 	{
-
-		std::vector<Vector> newPositions = getChunkPositionsForPosition(cameraPosition);
-		std::vector<Vector> positionsToLoad = std::move(getChunkPositionToLoad(newPositions));
-
-		//worldGenerator.requestChunks(positionsToLoad, { cameraX, cameraY, cameraZ });
-
-		/*chunks.removeAndDeleteWhere([&cameraPosition, this](Chunk* chunk) -> bool
-			{
-				return chunk->getPosition().distanceTo2(cameraPosition) > (renderRadius * renderRadius * 256);
-			});*/
-
-		loadedPositions = std::move(newPositions);
+		if (chunk->isDirty())
+		{
+			dirtyChunks.insert(chunk);
+		}
 	}
-	
-	prevCameraX = cameraX;
-	prevCameraY = cameraY;
-	prevCameraZ = cameraZ;
+
+	worldGenerator.requestCleaning(dirtyChunks);
 }
 
 void World::render()
@@ -86,20 +139,46 @@ void World::render()
 	const ShaderProgram& shaderProgram = ShaderProgramRegistry::GetInstance().getShaderProgram("object");
 
 	shaderProgram.use();
-	shaderProgram.setMatrix("projection_view", camera.getProjectionMatrix() * camera.getViewMatrix());
+	Matrix projectionViewMatrix = camera.getProjectionMatrix() * camera.getViewMatrix();
+	shaderProgram.setMatrix("projection_view", projectionViewMatrix);
+	shaderProgram.setVector("view_position", camera.getPosition());
+	shaderProgram.setFloat("time", time);
 
 	textureAtlas.bindToUnit(0);
 
+	if (ENABLE_FACE_CULLING)
+	{
+		glEnable(GL_CULL_FACE);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
+
+	shaderProgram.setFloat("waveAmplifier", 0);
+	shaderProgram.setBool("enablePhong", false);
 	for (auto& it : chunks)
 	{
+		//if (!it.second->isVisible(camera)) continue;
 		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first));
 		it.second->render();
 	}
 
 	for (auto& it : chunks)
 	{
+		//if (!it.second->isVisible(camera)) continue;
 		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first));
 		it.second->renderTransparent();
+	}
+
+	shaderProgram.setFloat("waveAmplifier", 1.5 / 16.0);
+	shaderProgram.setBool("enablePhong", true);
+	glDisable(GL_CULL_FACE);
+	for (auto& it : chunks)
+	{
+		//if (!it.second->isVisible(camera)) continue;
+		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first));
+		it.second->renderWater();
 	}
 }
 
@@ -114,10 +193,88 @@ std::optional<unsigned char> World::getBlockAt(int x, int y, int z)
 	int localZ = (z - chunkZ + 16) % 16;
 
 	Chunk* chunk = getChunkAt(chunkX, chunkY, chunkZ);
-	printf("%d %d %d; %d %d %d\n", chunkX, chunkY, chunkZ, localX, localY, localZ);
+	//printf("%d %d %d; %d %d %d\n", chunkX, chunkY, chunkZ, localX, localY, localZ);
 	if (chunk == nullptr) return {};
 	return chunk->getBlockAt(localX, localY, localZ);
 }
+
+void World::setBlock(const Vector& position, const Block& block)
+{
+	Vector chunkPosition = Vector::GlobalToChunk(position);
+	Vector localPosition = position % 16;
+
+	Chunk* chunk = getChunkAt(chunkPosition);
+	if (chunk == nullptr)
+	{
+		pendingBlocks[chunkPosition][localPosition] = block.id;
+		return;
+	}
+
+	chunk->setBlock(localPosition, block);
+	chunk->markDirty(true);
+	worldGenerator.requestCleaning(chunk);
+}
+
+void World::setBlocks(const std::unordered_map<Vector, unsigned char>& blocks)
+{
+	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> blocksPerChunk;
+
+	for (auto& pair : blocks)
+	{
+		Vector chunkPosition = Vector::GlobalToChunk(pair.first);
+		Vector localPosition = pair.first % 16;
+
+		blocksPerChunk[chunkPosition][localPosition] = pair.second;
+	}
+
+	std::vector<Chunk*> dirtyChunks;
+	for (const auto& [chunkPosition, blocks] : blocksPerChunk)
+	{
+		Chunk* chunk = getChunkAt(chunkPosition);
+		if (chunk == nullptr)
+		{
+			for (const auto& [blockPosition, blockID] : blocks)
+			{
+				pendingBlocks[chunkPosition][blockPosition] = blockID;
+			}
+			continue;
+		}
+
+		for (const auto& [blockPosition, blockID] : blocks)
+		{
+			chunk->setBlock(blockPosition, blockID);
+			chunk->markDirty(true);
+			worldGenerator.requestCleaning(chunk);
+		}
+
+		dirtyChunks.push_back(chunk);
+	}
+
+	blocksPerChunk.clear();
+
+	worldGenerator.requestCleaning(dirtyChunks);
+}
+
+void World::setBlocks(const std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>>& blocks)
+{
+	for (auto& [chunkPosition, chunkBlocks] : blocks)
+	{
+		if (Chunk* chunk = getChunkAt(chunkPosition))
+		{
+			for (auto& [blockPosition, blockID] : chunkBlocks)
+			{
+				chunk->setBlock(blockPosition, blockID);
+			}
+
+			chunk->markDirty(true);
+		}
+		else
+		{
+			pendingBlocks[chunkPosition] = chunkBlocks;
+		}
+	}
+}
+
 //std::optional<unsigned char> World::getBlockAt(int x, int y, int z)
 //{
 //	if (y < 0) return {};
@@ -138,6 +295,11 @@ std::optional<unsigned char> World::getBlockAt(int x, int y, int z)
 //	return {};
 //}
 
+Chunk* World::getChunkAt(const Vector& position)
+{
+	return getChunkAt(position.x, position.y, position.z);
+}
+
 Chunk* World::getChunkAt(int x, int y, int z)
 {
 	try
@@ -151,59 +313,38 @@ Chunk* World::getChunkAt(int x, int y, int z)
 	}
 }
 
-std::vector<Vector> World::getChunkPositionsForPosition(const Vector& position)
+std::vector<Vector> World::getChunkPositionsToLoad() const
 {
-	//return { {0, 0, 0, 0} };
 	std::vector<Vector> positions;
 
-	for (float x = position.x - renderRadius; x <= position.x + renderRadius; x++)
-	{
-		for (float y = 0; y <= 8; y++)
-		{
-			for (float z = position.z - renderRadius; z <= position.z + renderRadius; z++)
-			{
-				float xCoord = x - position.x;
-				float zCoord = z - position.z;
+	bool forTesting = true;
 
-				if (pow(xCoord, 2) + pow(zCoord, 2) <= pow(renderRadius, 2))
-				{
-					positions.push_back({ x * 16, y * 16, z * 16 });
-				}
+	if (forTesting)
+	{
+		int testRadius = 4;
+		for (int x = -testRadius; x <= testRadius; x++)
+		{
+			for (int z = -testRadius; z <= testRadius; z++)
+			{
+				positions.push_back({ x * 16, 0, z * 16 });
+			}
+		}
+	}
+	else
+	{
+		for (int x = -renderRadius; x <= renderRadius; x++)
+		{
+			for (int z = -renderRadius; z <= renderRadius; z++)
+			{
+				positions.push_back({ x * 16, 0, z * 16 });
 			}
 		}
 	}
 
-	return positions;
-}
-
-//std::vector<Vector> World::getChunkPositionsToUnload(const std::vector<Vector> oldPositions, const std::vector<Vector> newPositions)
-//{
-//	//return {};
-//	std::vector<Vector> positions;
-//
-//	for (const Vector& oldPosition : oldPositions)
-//	{
-//		if (std::find(newPositions.begin(), newPositions.end(), oldPosition) == newPositions.end())
-//		{
-//			positions.push_back(oldPosition);
-//		}
-//	}
-//
-//	return positions;
-//}
-//
-std::vector<Vector> World::getChunkPositionToLoad(const std::vector<Vector> newPositions)
-{
-	//return {};
-	std::vector<Vector> positions;
-
-	for (const Vector& newPosition : newPositions)
-	{
-		if (std::find(loadedPositions.begin(), loadedPositions.end(), newPosition) == loadedPositions.end())
+	std::sort(positions.begin(), positions.end(), [](const Vector& lhs, const Vector& rhs) -> bool
 		{
-			positions.push_back(newPosition);
-		}
-	}
+			return lhs.length2() > rhs.length2();
+		});
 
 	return positions;
 }

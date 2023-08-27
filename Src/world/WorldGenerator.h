@@ -4,12 +4,15 @@
 #include <queue>
 #include <thread>
 #include <vector>
+#include <set>
+#include <unordered_map>
 
 #include "utils/atomics/AtomicVector.h"
+#include "utils/atomics/AtomicSet.h"
 #include "math/Vector.h"
 #include "world/terrain/TerrainGenerator.h"
 
-#define GENERATORS_COUNT 6
+#define GENERATORS_COUNT 1
 
 class World;
 class Chunk;
@@ -21,7 +24,10 @@ public:
 
 	~WorldGenerator();
 
-	void requestChunks(const std::vector<Vector> positions, const Vector& currentPosition);
+	void requestChunks(const std::vector<Vector> positions);
+	void requestCleaning(Chunk* chunk);
+	void requestCleaning(const std::vector<Chunk*> chunks);
+	void requestCleaning(const std::set<Chunk*> chunks);
 
 private:
 	unsigned int seed;
@@ -29,13 +35,17 @@ private:
 
 	std::atomic_bool shouldStop;
 	std::thread generatorThreads[GENERATORS_COUNT];
+	std::thread cleaningThread;
 
 	AtomicVector<Vector> requestedPositions;
+
+	std::mutex cleaningMutex;
+	std::unordered_map<Vector, bool> cleaningProgressMap;
+	std::set<Chunk*> dirtyChunks;
 
 	TerrainGenerator* terrainGenerator;
 
 	void generateTerrain();
-	Chunk* generateChunk(const Vector& position) const;
 
 	WorldGenerator(const WorldGenerator& other) = delete;
 	void operator = (const WorldGenerator& other) = delete;

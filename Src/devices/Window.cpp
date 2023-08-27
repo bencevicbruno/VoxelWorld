@@ -20,6 +20,11 @@ std::string Window::getTitle() const
 	return title;
 }
 
+void Window::setTitle(const std::string& newTitle)
+{
+	glfwSetWindowTitle(pWindow, newTitle.c_str());
+}
+
 bool Window::isRunning() const
 {
 	return running;
@@ -95,7 +100,7 @@ Window::Window(std::string title):
 {
 	initGLFW();
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-
+	glViewport(0, 0, WIDTH, HEIGHT);
 	pWindow = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 	if (pWindow == nullptr)
 	{
