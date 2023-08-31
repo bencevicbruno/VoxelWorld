@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #pragma warning(push, 0) 
-#pragma warning( disable : 6308 28182 6262 6011 6819 6365 6386)
+#pragma warning( disable : 26819 6308 28182 6262 6011 6819 6365 6386 6385)
 #include "stb_image.h"
 #include "stb_image_write.h"
 #pragma warning(pop)

@@ -115,6 +115,51 @@ Mesh BlockMesh::getEastFace(Vector position, Color color) const
         });
 }
 
+Mesh BlockMesh::getCrossMesh(Vector position, Color color) const
+{
+    // Correction Factor = sqrt(2)/2
+    constexpr float cf = 0.7071;
+    Mesh mesh;
+
+    mesh.addMesh({ {
+        { position.x + box.minX * cf, position.y + box.minY, position.z + box.minZ * cf,   northTexturePosition.maxU, northTexturePosition.maxV, 1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.maxX * cf, position.y + box.minY, position.z - box.minZ * cf,   northTexturePosition.minU, northTexturePosition.maxV,  1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.maxX * cf, position.y + box.maxY, position.z - box.minZ * cf,   northTexturePosition.minU, northTexturePosition.minV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.minX * cf, position.y + box.maxY, position.z + box.minZ * cf,   northTexturePosition.maxU, northTexturePosition.minV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a }
+        }, {
+            0, 2, 1, 0, 3, 2
+        } });
+
+    mesh.addMesh({ {
+        { position.x + box.minX * cf, position.y + box.minY, position.z - box.maxX * cf,  southTexturePosition.maxU, northTexturePosition.maxV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.maxX * cf, position.y + box.minY, position.z + box.maxX * cf,  southTexturePosition.minU, northTexturePosition.maxV,    1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.maxX * cf, position.y + box.maxY, position.z + box.maxX * cf,  southTexturePosition.minU, northTexturePosition.minV,    1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.minX * cf, position.y + box.maxY, position.z - box.maxX * cf,  southTexturePosition.maxU, northTexturePosition.minV,    1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a }
+        }, {
+            0, 1, 2, 0, 2, 3
+        } });
+
+    mesh.addMesh({ {
+        { position.x + box.minX * cf, position.y + box.maxY, position.z + box.maxZ * cf, westTexturePosition.minU, westTexturePosition.minV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x - box.minX * cf, position.y + box.maxY, position.z + box.minZ * cf, westTexturePosition.maxU, westTexturePosition.minV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x - box.minX * cf, position.y + box.minY, position.z + box.minZ * cf, westTexturePosition.maxU, westTexturePosition.maxV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.minX * cf, position.y + box.minY, position.z + box.maxZ * cf, westTexturePosition.minU, westTexturePosition.maxV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a }
+        }, {
+            0, 1, 2, 0, 2, 3
+        } });
+
+    mesh.addMesh({ {
+        { position.x - box.maxX * cf, position.y + box.maxY, position.z + box.maxZ * cf,  eastTexturePosition.minU, eastTexturePosition.minV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.maxX * cf, position.y + box.maxY, position.z + box.minZ * cf,  eastTexturePosition.maxU, eastTexturePosition.minV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x + box.maxX * cf, position.y + box.minY, position.z + box.minZ * cf,  eastTexturePosition.maxU, eastTexturePosition.maxV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a },
+        { position.x - box.maxX * cf, position.y + box.minY, position.z + box.maxZ * cf,  eastTexturePosition.minU, eastTexturePosition.maxV,   1.0f, 1.0f, 1.0f,   color.r, color.g, color.b, color.a }
+        }, {
+            0, 2, 1, 0, 3, 2
+        } });
+
+    return mesh;
+}
+
 
 
 

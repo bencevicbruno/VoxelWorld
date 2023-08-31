@@ -1,28 +1,21 @@
 #include "world/mesh/OptimalChunkMeshBuilder.h"
 
 #include "world/utils/BlockRegistry.h"
-#include "world/Chunk.h"
+#include "world/chunk/Chunk.h"
 #include "world/World.h"
 
 #include "Options.h"
 
-OptimalChunkMeshBuilder& OptimalChunkMeshBuilder::GetInstance()
+ChunkMesh* OptimalChunkMeshBuilder::generateMesh(Chunk* chunk) const
 {
-	static OptimalChunkMeshBuilder builder;
+	ChunkMesh* chunkMesh = new ChunkMesh();
 
-	return builder;
-}
+	generateMiddle(chunk, *chunkMesh);
 
-ChunkMesh OptimalChunkMeshBuilder::generateMesh(Chunk* chunk) const
-{
-	ChunkMesh chunkMesh;
-
-	generateMiddle(chunk, chunkMesh);
-
-	generateNorth(chunk, chunkMesh);
-	generateSouth(chunk, chunkMesh);
-	generateWest(chunk, chunkMesh);
-	generateEast(chunk, chunkMesh);
+	generateNorth(chunk, *chunkMesh);
+	generateSouth(chunk, *chunkMesh);
+	generateWest(chunk, *chunkMesh);
+	generateEast(chunk, *chunkMesh);
 
 	return chunkMesh;
 }
@@ -57,6 +50,12 @@ void OptimalChunkMeshBuilder::generateMiddle(Chunk* chunk, ChunkMesh& chunkMesh)
 
 				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
 				Mesh& mesh = chunkMesh.getMeshForBlockID(currentBlockID);
+
+				if (currentBlockID == BLOCK_TALL_GRASS || currentBlockID == BLOCK_FLOWER_YELLOW || currentBlockID == BLOCK_FLOWER_RED)
+				{
+					mesh.addMesh(currentBlock.mesh.getCrossMesh({ x, y, z }));
+					continue;
+				}
 
 				// BOTTOM FACE
 				if (auto blockID = chunk->getBlockAt(x, y - 1, z))
@@ -132,7 +131,7 @@ void OptimalChunkMeshBuilder::generateNorth(Chunk* chunk, ChunkMesh& chunkMesh) 
 {
 	BlockRegistry& blockRegistry = BlockRegistry::GetInstance();
 
-	Chunk* chunkNorth = chunk->world->getChunkAt(chunk->getPosition().goNorth(16));
+	Chunk* chunkNorth = chunk->world->getChunkAt(chunk->getPosition().goNorth());
 
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
@@ -166,7 +165,7 @@ void OptimalChunkMeshBuilder::generateSouth(Chunk* chunk, ChunkMesh& chunkMesh) 
 {
 	BlockRegistry& blockRegistry = BlockRegistry::GetInstance();
 
-	Chunk* chunkSouth = chunk->world->getChunkAt(chunk->getPosition().goSouth(16));
+	Chunk* chunkSouth = chunk->world->getChunkAt(chunk->getPosition().goSouth());
 
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
@@ -201,7 +200,7 @@ void OptimalChunkMeshBuilder::generateWest(Chunk* chunk, ChunkMesh& chunkMesh) c
 {
 	BlockRegistry& blockRegistry = BlockRegistry::GetInstance();
 
-	Chunk* chunkWest = chunk->world->getChunkAt(chunk->getPosition().goWest(16));
+	Chunk* chunkWest = chunk->world->getChunkAt(chunk->getPosition().goWest());
 
 	for (int z = 0; z < CHUNK_WIDTH; z++)
 	{
@@ -236,7 +235,7 @@ void OptimalChunkMeshBuilder::generateEast(Chunk* chunk, ChunkMesh& chunkMesh) c
 {
 	BlockRegistry& blockRegistry = BlockRegistry::GetInstance();
 
-	Chunk* chunkEast = chunk->world->getChunkAt(chunk->getPosition().goEast(16));
+	Chunk* chunkEast = chunk->world->getChunkAt(chunk->getPosition().goEast());
 
 	for (int z = 0; z < CHUNK_WIDTH; z++)
 	{

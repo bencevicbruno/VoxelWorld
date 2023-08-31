@@ -30,9 +30,7 @@ void Mesh::addMesh(const Mesh& otherMesh)
 {
 	const unsigned int verticesCount = vertices.size();
 
-
 	vertices.insert(vertices.end(), otherMesh.vertices.begin(), otherMesh.vertices.end());
-
 
 	for (unsigned int index : otherMesh.indices)
 	{

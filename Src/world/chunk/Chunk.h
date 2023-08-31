@@ -7,7 +7,7 @@
 #include "math/Vector.h"
 #include "math/Matrix.h"
 #include "renderer/models/Mesh.h"
-#include "world/ChunkMesh.h"
+#include "world/chunk/ChunkMesh.h"
 #include "renderer/shader/ShaderProgram.h"
 #include "world/utils/BlockRegistry.h"
 
@@ -35,17 +35,16 @@ public:
 	Vector getPosition() const;
 	bool containsPosition(int x, int y, int z) const;
 	std::optional<unsigned char> getBlockAt(int x, int y, int z) const;
+	unsigned char getBlockAt(const Vector& position) const;
 	void setBlock(const Vector& position, const Block& block);
 	void setBlock(const Vector& position, unsigned char block);
 
 	bool isDirty() const;
 	void markDirty(bool isDirty);
-	ChunkMesh generateMesh();
-
 
 	std::vector<Vector> getNeighbouringPositions() const;
 
-	void updateChunkMesh(ChunkMesh&& chunkMesh, bool shouldGenerateBuffers = false);
+	void updateChunkMesh(ChunkMesh* chunkMesh);
 private:
 	Vector position;
 	World* world;

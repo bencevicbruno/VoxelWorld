@@ -1,19 +1,12 @@
 #include "world/mesh/BasicChunkMeshBuilder.h"
 
 #include "world/utils/BlockRegistry.h"
-#include "world/Chunk.h"
+#include "world/chunk/Chunk.h"
 
-BasicChunkMeshBuilder& BasicChunkMeshBuilder::GetInstance()
-{
-	static BasicChunkMeshBuilder builder;
-
-	return builder;
-}
-
-ChunkMesh BasicChunkMeshBuilder::generateMesh(Chunk* chunk) const
+ChunkMesh* BasicChunkMeshBuilder::generateMesh(Chunk* chunk) const
 {
 	BlockRegistry& blockRegistry = BlockRegistry::GetInstance();
-	ChunkMesh chunkMesh;
+	ChunkMesh* chunkMesh = new ChunkMesh();
 
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
@@ -25,7 +18,13 @@ ChunkMesh BasicChunkMeshBuilder::generateMesh(Chunk* chunk) const
 				if (currentBlockID == 0) continue;
 
 				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
-				Mesh& mesh = chunkMesh.getMeshForBlockID(currentBlockID);
+				Mesh& mesh = chunkMesh->getMeshForBlockID(currentBlockID);
+
+				if (currentBlockID == BLOCK_TALL_GRASS || currentBlockID == BLOCK_FLOWER_YELLOW || currentBlockID == BLOCK_FLOWER_RED)
+				{
+					mesh.addMesh(currentBlock.mesh.getCrossMesh({ x, y, z }));
+					continue;
+				}
 
 				mesh.addMesh(currentBlock.mesh.getBottomFace({ x, y, z }));
 				mesh.addMesh(currentBlock.mesh.getTopFace({ x, y, z }));

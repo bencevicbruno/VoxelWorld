@@ -1,7 +1,7 @@
 #pragma once
 
 #include "math/LinearInterpolator.h"
-#include "math/OctaveNoiseGenerator.h"
+#include "math/PerlinNoiseGenerator.h"
 #include "world/terrain/TerrainGenerator.h"
 
 class MinecraftNoiseGenerator : public TerrainGenerator
@@ -15,12 +15,12 @@ public:
 private:
 	int seaBed;
 
-	OctaveNoiseGenerator continentalnessGenerator;
+	PerlinNoiseGenerator continentalnessGenerator;
 	LinearInterpolator continentalnessInterpolator;
 
-	OctaveNoiseGenerator erosionGenerator;
+	PerlinNoiseGenerator erosionGenerator;
 	LinearInterpolator erosionInterpolator;
 
-	OctaveNoiseGenerator peaksAndValleysGenerator;
+	PerlinNoiseGenerator peaksAndValleysGenerator;
 	LinearInterpolator peaksAndValleysInterpolator;
 };

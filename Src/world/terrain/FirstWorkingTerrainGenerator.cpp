@@ -1,7 +1,7 @@
 #include "world/terrain/FirstWorkingTerrainGenerator.h"
 
 #include "world/Blocks.h"
-#include "world/Chunk.h"
+#include "world/chunk/Chunk.h"
 
 FirstWorkingTerrainGenerator::FirstWorkingTerrainGenerator(unsigned int seed) :
 	TerrainGenerator(),
@@ -20,10 +20,13 @@ unsigned char* FirstWorkingTerrainGenerator::generateTerrain(unsigned int seed, 
 
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
+		int globalX = 16 * position.x + x;
 		for (int z = 0; z < CHUNK_WIDTH; z++)
 		{
+			int globalZ = 16 * position.z + z;
+
 			int height = getHeight(position.x + x, position.z + z);
-			unsigned char coverBlock = coverGenerator.get01(position.x + x, position.z + z) > 0.5 ? BLOCK_GRASS : BLOCK_SAND;
+			unsigned char coverBlock = coverGenerator.get(globalX, globalZ) > 0.5 ? BLOCK_GRASS : BLOCK_SAND;
 
 			for (int y = 0; y < CHUNK_HEIGHT; y++)
 			{
@@ -56,7 +59,7 @@ unsigned char* FirstWorkingTerrainGenerator::generateTerrain(unsigned int seed, 
 					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = BLOCK_WATER_SURFACE;
 				}
 
-				double caveValue = caveGenerator.get01(x, y, z);
+				double caveValue = caveGenerator.get(x, y, z);
 				if (caveValue < 0.5)
 				{
 					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = BLOCK_AIR;

@@ -1,7 +1,7 @@
 #include "world/terrain/BiomeNoiseTerrainGenerator.h"
 
 #include "world/Blocks.h"
-#include "world/Chunk.h"
+#include "world/chunk/Chunk.h"
 
 BiomeNoiseTerrainGenerator::BiomeNoiseTerrainGenerator(unsigned int seed) :
 	TerrainGenerator(),
@@ -18,10 +18,10 @@ unsigned char* BiomeNoiseTerrainGenerator::generateTerrain(unsigned int seed, co
 	{
 		for (int z = 0; z < CHUNK_WIDTH; z++)
 		{
-			int globalX = position.x + x;
-			int globalZ = position.z + z;
+			int globalX = 16 * position.x + x;
+			int globalZ = 16 * position.z + z;
 
-			double value = noiseGenerator.get01(globalX, globalZ);
+			double value = noiseGenerator.get(globalX, globalZ);
 			int coordinates = 0 * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z;
 			//std::cout << value << std::endl;
 			if (value >= 0.5 && value <= 0.6) {
@@ -31,7 +31,7 @@ unsigned char* BiomeNoiseTerrainGenerator::generateTerrain(unsigned int seed, co
 				blocks[coordinates] = BLOCK_STONE;
 			}
 
-			if (decorationsNoiseGenerator.get01(globalX, globalZ) > 0.7 && (((x + z) % 11) == 0))
+			if (decorationsNoiseGenerator.get(globalX, globalZ) > 0.7 && (((x + z) % 11) == 0))
 			{
 				blocks[coordinates] = BLOCK_GRASS;
 			}

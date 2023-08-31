@@ -88,7 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Src;$(SolutionDir)Dependencies\STB_IMAGE\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\PERLIN_NOISE\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\FAST_NOISE_LITE\include;$(SolutionDir)Include;$(SolutionDir)Src;$(SolutionDir)Dependencies\STB_IMAGE\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\PERLIN_NOISE\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -108,7 +108,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Src;$(SolutionDir)Dependencies\STB_IMAGE\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\PERLIN_NOISE\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\FAST_NOISE_LITE\include;$(SolutionDir)Include;$(SolutionDir)Src;$(SolutionDir)Dependencies\STB_IMAGE\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\PERLIN_NOISE\include;$(SolutionDIr)Dependencies\FAST_NOISE_LITE\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -128,7 +128,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Src;$(SolutionDir)Dependencies\STB_IMAGE\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\PERLIN_NOISE\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\FAST_NOISE_LITE\include;$(SolutionDir)Include;$(SolutionDir)Src;$(SolutionDir)Dependencies\STB_IMAGE\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\PERLIN_NOISE\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -147,7 +147,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;GLEW_STATIC</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Include;$(SolutionDir)Src;$(SolutionDir)Dependencies\STB_IMAGE\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\PERLIN_NOISE\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\FAST_NOISE_LITE\include;$(SolutionDir)Include;$(SolutionDir)Src;$(SolutionDir)Dependencies\STB_IMAGE\include;$(SolutionDir)Dependencies\GLFW\include;$(SolutionDir)Dependencies\PERLIN_NOISE\include;$(SolutionDIr)Dependencies\FAST_NOISE_LITE\include;$(SolutionDir)Dependencies\GLEW\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -212,8 +212,9 @@
     <ClCompile Include="Src\utils\image\ImageManagerException.cpp" />
     <ClCompile Include="Src\utils\log\ConsoleLogger.cpp" />
     <ClCompile Include="Src\utils\Utils.cpp" />
-    <ClCompile Include="Src\world\Chunk.cpp" />
-    <ClCompile Include="Src\world\ChunkMesh.cpp" />
+    <ClCompile Include="Src\world\chunk\Chunk.cpp" />
+    <ClCompile Include="Src\world\chunk\ChunkMesh.cpp" />
+    <ClCompile Include="Src\world\chunk\ChunkMesher.cpp" />
     <ClCompile Include="Src\world\decoration\OakTreeWorldDecoration.cpp" />
     <ClCompile Include="Src\world\decoration\WorldDecoration.cpp" />
     <ClCompile Include="Src\world\mesh\BasicChunkMeshBuilder.cpp" />
@@ -225,7 +226,7 @@
     <ClCompile Include="Src\world\utils\BlockRegistry.cpp" />
     <ClCompile Include="Src\world\utils\BlockRegistryException.cpp" />
     <ClCompile Include="Src\world\World.cpp" />
-    <ClCompile Include="Src\world\WorldGenerator.cpp" />
+    <ClCompile Include="Src\world\chunk\ChunkGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\textures\asteroid.png" />
@@ -289,6 +290,7 @@
     <None Include="Resources\shaders\sun.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dependencies\FAST_NOISE_LITE\include\FastNoiseLite.h" />
     <ClInclude Include="Dependencies\GLEW\include\GLEW\eglew.h" />
     <ClInclude Include="Dependencies\GLEW\include\GLEW\glew.h" />
     <ClInclude Include="Dependencies\GLEW\include\GLEW\glxew.h" />
@@ -358,8 +360,9 @@
     <ClInclude Include="Src\utils\log\ILogger.h" />
     <ClInclude Include="Src\utils\Utils.h" />
     <ClInclude Include="Src\world\Blocks.h" />
-    <ClInclude Include="Src\world\Chunk.h" />
-    <ClInclude Include="Src\world\ChunkMesh.h" />
+    <ClInclude Include="Src\world\chunk\Chunk.h" />
+    <ClInclude Include="Src\world\chunk\ChunkMesh.h" />
+    <ClInclude Include="Src\world\chunk\ChunkMesher.h" />
     <ClInclude Include="Src\world\decoration\OakTreeWorldDecoration.h" />
     <ClInclude Include="Src\world\mesh\BasicChunkMeshBuilder.h" />
     <ClInclude Include="Src\world\mesh\ChunkMeshBuilder.h" />
@@ -373,7 +376,7 @@
     <ClInclude Include="Src\world\utils\BlockRegistryException.h" />
     <ClInclude Include="Src\world\World.h" />
     <ClInclude Include="Src\world\decoration\WorldDecoration.h" />
-    <ClInclude Include="Src\world\WorldGenerator.h" />
+    <ClInclude Include="Src\world\chunk\ChunkGenerator.h" />
     <ClInclude Include="Src\_tests\FileManagerTests.h" />
     <ClInclude Include="Src\_tests\ImageManagerTests.h" />
     <ClInclude Include="Src\_tests\PerlinNoiseImagesTest.h" />

@@ -1,4 +1,4 @@
-#include "world/Chunk.h"
+#include "world/chunk/Chunk.h"
 
 #include "Options.h"
 #include "devices/Window.h"
@@ -13,13 +13,11 @@
 #include "world/utils/BlockRegistry.h"
 
 Chunk::Chunk(const Vector& position, World* world, unsigned char* blocks) :
-	position({ position.x, position.y, position.z, 0 }),
+	position(position),
 	world(world),
 	blocks(blocks),
 	dirty(false)
-{
-	updateChunkMesh(std::move(generateMesh()), false);
-}
+{}
 
 Chunk::Chunk(Chunk&& other) noexcept
 {
@@ -42,24 +40,6 @@ Chunk::~Chunk()
 	delete[] blocks;
 }
 
-ChunkMesh Chunk::generateMesh()
-{
-	switch (CHUNK_MESH_BUILDING_STRATEGY)
-	{
-	case BASIC_CHUNK_MESH_BULDING_STRATEGY:
-		return std::move(BasicChunkMeshBuilder::GetInstance().generateMesh(this));
-		break;
-	case PER_CHUNK_OPTIMIZED_CHUNK_MESH_BUILDING_STRATEGY:
-		return std::move(PerChunkOptimizedChunkMeshBuilder::GetInstance().generateMesh(this));
-		break;
-	case OPTIMAL_CHUNK_MESH_BUILDING_STRATEGY:
-		return std::move(OptimalChunkMeshBuilder::GetInstance().generateMesh(this));
-		break;
-	default:
-		exit(69);
-	}
-}
-
 void Chunk::generateBuffers()
 {
 	mesh.generateBuffers();
@@ -70,7 +50,7 @@ void Chunk::generateBuffers()
 bool Chunk::isVisible(const Camera& camera) const
 {
 	//return true;
-	Matrix chunkTranslationMatrix = Matrix::GetTranslation(position);
+	Matrix chunkTranslationMatrix = Matrix::GetTranslation(position * 16);
 	Matrix chunkMatrix = camera.getProjectionMatrix() * camera.getViewMatrix() * chunkTranslationMatrix;
 	
 	int horizontalCoordinates[] = { 0, CHUNK_WIDTH };
@@ -97,18 +77,18 @@ bool Chunk::isVisible(const Camera& camera) const
 	return false;
 }
 
-void Chunk::updateChunkMesh(ChunkMesh&& chunkMesh, bool shouldGenerateBuffers)
+void Chunk::updateChunkMesh(ChunkMesh* chunkMesh)
 {
-	mesh = std::move(chunkMesh.solidMesh);
-	transparentMesh = std::move(chunkMesh.transparentMesh);
-	waterMesh = std::move(chunkMesh.waterMesh);
+	mesh = std::move(chunkMesh->solidMesh);
+	mesh.generateBuffers();
 
-	if (shouldGenerateBuffers)
-	{
-		mesh.generateBuffers();
-		transparentMesh.generateBuffers();
-		waterMesh.generateBuffers();
-	}
+	transparentMesh = std::move(chunkMesh->transparentMesh);
+	transparentMesh.generateBuffers();
+
+	waterMesh = std::move(chunkMesh->waterMesh);
+	waterMesh.generateBuffers();
+
+	delete chunkMesh;
 }
 
 void Chunk::render() const
@@ -151,6 +131,11 @@ std::optional<unsigned char> Chunk::getBlockAt(int x, int y, int z) const
 	return blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z];
 }
 
+unsigned char Chunk::getBlockAt(const Vector& position) const
+{
+	return blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)];
+}
+
 void Chunk::setBlock(const Vector& position, const Block& block)
 {
 	setBlock(position, block.id);
@@ -160,10 +145,12 @@ void Chunk::setBlock(const Vector& position, unsigned char block)
 {
 	if (position.x < 0 || position.y < 0 || position.z < 0 || position.x >= CHUNK_WIDTH || position.y >= CHUNK_HEIGHT || position.z >= CHUNK_WIDTH)
 	{
-		throw "What the hell";
+		std::cout << "Weird coordiantes incoming " << position << std::endl;
+		return;// throw "What the hell";
 	}
 
 	blocks[int(position.y) * CHUNK_WIDTH * CHUNK_WIDTH + int(position.x) * CHUNK_WIDTH + int(position.z)] = block;
+	dirty = true;
 }
 
 bool Chunk::isDirty() const
@@ -179,9 +166,9 @@ void Chunk::markDirty(bool isDirty)
 std::vector<Vector> Chunk::getNeighbouringPositions() const
 {
 	return {
-		position.goNorth(16),
-		position.goSouth(16),
-		position.goEast(16),
-		position.goWest(16)
+		position.goNorth(),
+		position.goSouth(),
+		position.goEast(),
+		position.goWest()
 	};
 }

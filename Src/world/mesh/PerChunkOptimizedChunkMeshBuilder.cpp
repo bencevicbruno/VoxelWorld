@@ -1,19 +1,13 @@
 #include "world/mesh/PerChunkOptimizedChunkMeshBuilder.h"
 
 #include "world/utils/BlockRegistry.h"
-#include "world/Chunk.h"
+#include "world/chunk/Chunk.h"
 
-PerChunkOptimizedChunkMeshBuilder& PerChunkOptimizedChunkMeshBuilder::GetInstance()
+ChunkMesh* PerChunkOptimizedChunkMeshBuilder::generateMesh(Chunk* chunk) const
 {
-	static PerChunkOptimizedChunkMeshBuilder builder;
-
-	return builder;
-}
-
-ChunkMesh PerChunkOptimizedChunkMeshBuilder::generateMesh(Chunk* chunk) const
-{
+	//std::cout << "Gen for " << chunk->getPosition() << std::endl;
 	BlockRegistry& blockRegistry = BlockRegistry::GetInstance();
-	ChunkMesh chunkMesh;
+	ChunkMesh* chunkMesh = new ChunkMesh();
 
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
@@ -25,7 +19,13 @@ ChunkMesh PerChunkOptimizedChunkMeshBuilder::generateMesh(Chunk* chunk) const
 				if (currentBlockID == 0) continue;
 
 				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
-				Mesh& mesh = chunkMesh.getMeshForBlockID(currentBlockID);
+				Mesh& mesh = chunkMesh->getMeshForBlockID(currentBlockID);
+
+				if (currentBlockID == BLOCK_TALL_GRASS || currentBlockID == BLOCK_FLOWER_YELLOW || currentBlockID == BLOCK_FLOWER_RED)
+				{
+					mesh.addMesh(currentBlock.mesh.getCrossMesh({ x, y, z }));
+					continue;
+				}
 
 				// BOTTOM FACE
 				if (auto blockID = chunk->getBlockAt(x, y - 1, z))

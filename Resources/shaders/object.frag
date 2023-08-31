@@ -61,7 +61,11 @@ void main()
     }
     else 
     {
-        FragColor = texture(object_texture, uv) * color;
+        vec4 outputFragColor = texture(object_texture, uv) * color;
+
+        if (outputFragColor.a < 0.5)
+            discard;
+        FragColor = outputFragColor;
     }
     
 }

@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <ctime>
+#include <chrono>
 
 #include "devices/Window.h"
 #include "renderer/camera/Camera.h"
@@ -22,8 +23,6 @@
 #include "world/Blocks.h"
 
 #include "renderer/models/BlockMesh.h"
-
-#include <chrono>
 
 void initBlockRegistry();
 
@@ -52,7 +51,12 @@ int main()
 	ShaderProgramRegistry::GetInstance().loadShader("skybox");
 
 	Skybox skybox(Color::CreateFromRGB(173, 216, 230));
-	World world(8, 8);
+
+	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+	std::time_t time = std::chrono::system_clock::to_time_t(now);
+	unsigned int currentTime = static_cast<unsigned int>(time);
+
+	World world(currentTime, 8);
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -97,4 +101,8 @@ void initBlockRegistry()
 	registry.registerBlock(BLOCK_SNOW, BlockMesh(UVPosition::FromAtlas(5, 0)), BlockOpacity::OPAQUE);
 	registry.registerBlock(BLOCK_OAK_LOG, BlockMesh(UVPosition::FromAtlas(8, 0), UVPosition::FromAtlas(7, 0)), BlockOpacity::OPAQUE);
 	registry.registerBlock(BLOCK_OAK_LEAVES, BlockMesh(UVPosition::FromAtlas(9, 0)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_TALL_GRASS, BlockMesh(UVPosition::FromAtlas(10, 0)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_GRAVEL, BlockMesh(UVPosition::FromAtlas(11, 0)), BlockOpacity::OPAQUE);
+	registry.registerBlock(BLOCK_FLOWER_YELLOW, BlockMesh(UVPosition::FromAtlas(12, 0)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_FLOWER_RED, BlockMesh(UVPosition::FromAtlas(13, 0)), BlockOpacity::SEE_THROUGH);
 }

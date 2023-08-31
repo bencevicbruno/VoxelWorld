@@ -1,12 +1,12 @@
 #pragma once
 
-#include "world/ChunkMesh.h"
+#include "world/chunk/ChunkMesh.h"
 
 class Chunk;
 
 class ChunkMeshBuilder
 {
 public:
-	virtual ChunkMesh generateMesh(Chunk* chunk) const = 0;
+	virtual ChunkMesh* generateMesh(Chunk* chunk) const = 0;
 	virtual ~ChunkMeshBuilder() = default;
 };

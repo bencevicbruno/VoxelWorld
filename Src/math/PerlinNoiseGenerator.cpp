@@ -13,66 +13,40 @@ PerlinNoiseGenerator::PerlinNoiseGenerator() :
 	unsigned int randomSeed = (unsigned int)rand();
 
 	this->seed = randomSeed;
-	this->perlinNoise = siv::PerlinNoise(randomSeed);
+	perlinNoise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+	perlinNoise.SetSeed(randomSeed);
 }
 
 PerlinNoiseGenerator::PerlinNoiseGenerator(unsigned int seed, double constant) :
-	seed(seed),
-	perlinNoise(siv::PerlinNoise(seed)),
-	constantX(constant),
-	constantY(constant),
-	constantZ(constant)
+	PerlinNoiseGenerator(seed, constant, constant, constant)
 {}
 
 PerlinNoiseGenerator::PerlinNoiseGenerator(unsigned int seed, double constantX, double constantY, double constantZ) :
 	seed(seed),
-	perlinNoise(siv::PerlinNoise(seed)),
 	constantX(constantX),
 	constantY(constantY),
 	constantZ(constantZ)
-{}
+{
+	perlinNoise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+	perlinNoise.SetSeed(seed);
+}
 
 double PerlinNoiseGenerator::get(double x, double y) const
 {
-	return perlinNoise.noise2D(constantX * x, constantY * y);
+	return (perlinNoise.GetNoise(constantX * x, constantY * y) + 1.0) * 0.5;
 }
 
 double PerlinNoiseGenerator::get(int x, int y) const
 {
-	return perlinNoise.noise2D(constantX * x, constantY * y);
-}
-
-double PerlinNoiseGenerator::get01(double x, double y) const
-{
-	return perlinNoise.noise2D_01(constantX * x, constantY * y);
-}
-
-double PerlinNoiseGenerator::get01(int x, int y) const
-{
-	return perlinNoise.noise2D_01(constantX * x, constantY * y);
+	return get(constantX * x, constantY * y);
 }
 
 double PerlinNoiseGenerator::get(double x, double y, double z) const
 {
-	return perlinNoise.noise3D(constantX * x, constantY * y, constantZ * z);
+	return (perlinNoise.GetNoise(constantX * x, constantY * y, constantZ * z) + 1.0) * 0.5;
 }
 
 double PerlinNoiseGenerator::get(int x, int y, int z) const
 {
-	return perlinNoise.noise3D(constantX * x, constantY * y, constantZ * z);
-}
-
-double PerlinNoiseGenerator::get01(double x, double y, double z) const
-{
-	return perlinNoise.noise3D_01(constantX * x, constantY * y, constantZ * z);
-}
-
-double PerlinNoiseGenerator::get01(int x, int y, int z) const
-{
-	return perlinNoise.noise3D_01(constantX * x, constantY * y, constantZ * z);
-}
-
-double PerlinNoiseGenerator::get01(unsigned int seed, double x, double y, double z)
-{
-	return siv::PerlinNoise(seed).noise3D_01(x, y, z);
+	return get(constantX * x, constantY * y, constantZ * z);
 }

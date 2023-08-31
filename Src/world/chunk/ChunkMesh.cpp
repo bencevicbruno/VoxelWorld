@@ -1,4 +1,4 @@
-#include "world/ChunkMesh.h"
+#include "world/chunk/ChunkMesh.h"
 
 #include "world/Blocks.h"
 

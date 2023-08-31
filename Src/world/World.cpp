@@ -4,33 +4,25 @@
 
 #include <stdio.h>
 
+#include "utils/debug/Debug.h"
 #include "math/Math.h"
 #include "renderer/camera/Camera.h"
 #include "renderer/shader/ShaderProgramRegistry.h"
 #include "utils/image/ImageManager.h"
-#include "world/ChunkMesh.h"
-#include "world/Chunk.h"
+#include "world/chunk/ChunkMesh.h"
+#include "world/chunk/Chunk.h"
 #include "renderer/models/BlockMesh.h"
-
-World::World() :
-	renderRadius(8),
-	textureAtlas(Texture::CreateFromImage("atlas.png")),
-	worldGenerator({ this }),
-	time(0)
-{
-	std::srand((unsigned int)std::time(NULL));
-	this->seed = (unsigned int)rand();
-}
 
 World::World(unsigned int seed, int renderRadius) :
 	seed(seed),
 	renderRadius(renderRadius),
 	textureAtlas(Texture::CreateFromImage("atlas.png")),
-	worldGenerator({this}),
+	chunkMesher(ChunkMesher(this)),
+	chunkGenerator(ChunkGenerator(this, &chunkMesher)),
 	time(0)
 {
 	textureAtlas.setWrapAndFilterForGUI();
-	worldGenerator.requestChunks(getChunkPositionsToLoad());
+	chunkGenerator.requestChunks(getChunkPositionsToLoad());
 }
 
 World::~World()
@@ -46,65 +38,49 @@ unsigned int World::getSeed() const
 	return seed;
 }
 
-void World::addChunk(Chunk* chunk)
+void World::addChunk(Chunk* chunk, ChunkMesh* chunkMesh)
 {
-	pendingChunks.append(chunk);
+	addChunks({ {chunk, std::move(chunkMesh)} });
 }
 
-void World::addChunks(const std::vector<Chunk*>& chunks)
+void World::addChunks(const std::vector<std::tuple<Chunk*, ChunkMesh*>>& chunks)
 {
 	pendingChunks.append(chunks);
 }
 
-void World::cleanChunk(Chunk* chunk, ChunkMesh&& chunkMesh)
+void World::addCleanChunk(Chunk* chunk, ChunkMesh* chunkMesh)
 {
-	cleanChunks.set(chunk, std::move(chunkMesh));
+	addCleanChunks({ {chunk, std::move(chunkMesh)} });
 }
+
+void World::addCleanChunks(const std::vector<std::tuple<Chunk*, ChunkMesh*>>& chunks)
+{
+	cleanedChunks.append(chunks);
+}
+
 
 void World::update(const Vector& cameraPosition)
 {
+	updateCleanedChunkMeshes();
+	handlePendingBlocks();
 	addPendingChunks();
-
-	cleanChunks.perform([this](auto& cleanChunks) -> void
-		{
-			for (auto& [chunk, newMesh] : cleanChunks)
-			{
-				chunk->updateChunkMesh(std::move(newMesh), true);
-			}
-
-			cleanChunks.clear();
-		});
-	
-	for (auto& [position, blocks] : pendingBlocks)
-	{
-		if (blocks.empty()) continue;
-
-		if (Chunk* chunk = getChunkAt(position))
-		{
-			for (auto& [blockPosition, block] : blocks)
-			{
-				chunk->setBlock(blockPosition, block);
-			}
-
-			chunk->markDirty(true);
-		}
-
-		blocks.clear();
-	}
-
 	handleDirtyChunks();
+
 	time += 0.01;
 }
 
 void World::addPendingChunks()
 {
-	pendingChunks.perform([this](std::vector<Chunk*>& pendingChunks) -> void
+	pendingChunks.perform([this](std::vector<std::tuple<Chunk*, ChunkMesh*>>& pendingChunks) -> void
 		{
-			for (Chunk* chunk : pendingChunks)
+			for (auto& [chunk, chunkMesh] : pendingChunks)
 			{
-				chunk->generateBuffers();
+				chunk->updateChunkMesh(chunkMesh);
 				this->chunks[chunk->getPosition()] = chunk;
+			}
 
+			for (auto& [chunk, chunkMesh] : pendingChunks)
+			{
 				for (const Vector& position : chunk->getNeighbouringPositions())
 				{
 					if (Chunk* neighbourChunk = this->getChunkAt(position))
@@ -118,19 +94,63 @@ void World::addPendingChunks()
 		});
 }
 
+void World::updateCleanedChunkMeshes()
+{
+	cleanedChunks.perform([this](std::vector<std::tuple<Chunk*, ChunkMesh*>>& cleanedChunks) -> void
+		{
+			for (auto& [chunk, chunkMesh] : cleanedChunks)
+			{
+				chunk->updateChunkMesh(chunkMesh);
+				chunk->markDirty(false);
+			}
+
+			cleanedChunks.clear();
+		});
+}
+
+void World::handlePendingBlocks()
+{
+	pendingBlocksMutex.lock();
+
+	std::vector<Vector> checkedPositions;
+
+	for (auto& [chunkPosition, blocks] : pendingBlocks)
+	{
+		if (Chunk* chunk = getChunkAt(chunkPosition))
+		{
+			for (auto& [blockPosition, blockID] : blocks)
+			{
+				chunk->setBlock(blockPosition, blockID);
+			}
+
+			checkedPositions.push_back(chunkPosition);
+			blocks.clear();
+			chunk->markDirty(true);
+		}
+	}
+
+	for (const Vector& checkedPosition : checkedPositions)
+	{
+		pendingBlocks.erase(checkedPosition);
+	}
+
+	pendingBlocksMutex.unlock();
+}
+
 void World::handleDirtyChunks()
 {
-	std::set<Chunk*> dirtyChunks;
+	std::vector<Chunk*> dirtyChunks;
 
 	for (const auto& [position, chunk] : chunks)
 	{
 		if (chunk->isDirty())
 		{
-			dirtyChunks.insert(chunk);
+			dirtyChunks.push_back(chunk);
+			chunk->markDirty(false);
 		}
 	}
 
-	worldGenerator.requestCleaning(dirtyChunks);
+	chunkMesher.requestRemeshes(dirtyChunks);
 }
 
 void World::render()
@@ -160,46 +180,46 @@ void World::render()
 	for (auto& it : chunks)
 	{
 		//if (!it.second->isVisible(camera)) continue;
-		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first));
+		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first * 16));
 		it.second->render();
 	}
 
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.5f);
 	for (auto& it : chunks)
 	{
 		//if (!it.second->isVisible(camera)) continue;
-		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first));
+		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first * 16));
 		it.second->renderTransparent();
 	}
+	glDisable(GL_ALPHA_TEST);
 
+	glDisable(GL_CULL_FACE);
 	shaderProgram.setFloat("waveAmplifier", 1.5 / 16.0);
 	shaderProgram.setBool("enablePhong", true);
-	glDisable(GL_CULL_FACE);
 	for (auto& it : chunks)
 	{
 		//if (!it.second->isVisible(camera)) continue;
-		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first));
+		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first * 16));
 		it.second->renderWater();
 	}
 }
 
 std::optional<unsigned char> World::getBlockAt(int x, int y, int z)
 {
-	int chunkX = (x < 0) ? ((x - 16) / 16) : (x / 16);
-	int chunkY = (y < 0) ? ((y - 16) / 16) : (y / 16);
-	int chunkZ = (z < 0) ? ((z - 16) / 16) : (z / 16);
+	Vector chunkPosition = Vector::GlobalToChunk({ x, y, z });
+	Vector localPosition = Vector::GlobalToChunk({ x, y, z });
 
-	int localX = (x - chunkX + 16) % 16;
-	int localY = (y - chunkY + 16) % 16;
-	int localZ = (z - chunkZ + 16) % 16;
+	Chunk* chunk = getChunkAt(chunkPosition);
 
-	Chunk* chunk = getChunkAt(chunkX, chunkY, chunkZ);
-	//printf("%d %d %d; %d %d %d\n", chunkX, chunkY, chunkZ, localX, localY, localZ);
 	if (chunk == nullptr) return {};
-	return chunk->getBlockAt(localX, localY, localZ);
+
+	return chunk->getBlockAt(localPosition);
 }
 
 void World::setBlock(const Vector& position, const Block& block)
 {
+	pendingBlocksMutex.lock();
 	Vector chunkPosition = Vector::GlobalToChunk(position);
 	Vector localPosition = position % 16;
 
@@ -207,16 +227,17 @@ void World::setBlock(const Vector& position, const Block& block)
 	if (chunk == nullptr)
 	{
 		pendingBlocks[chunkPosition][localPosition] = block.id;
+		pendingBlocksMutex.unlock();
 		return;
 	}
 
 	chunk->setBlock(localPosition, block);
-	chunk->markDirty(true);
-	worldGenerator.requestCleaning(chunk);
+	pendingBlocksMutex.unlock();
 }
 
 void World::setBlocks(const std::unordered_map<Vector, unsigned char>& blocks)
 {
+	pendingBlocksMutex.lock();
 	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> blocksPerChunk;
 
 	for (auto& pair : blocks)
@@ -227,7 +248,6 @@ void World::setBlocks(const std::unordered_map<Vector, unsigned char>& blocks)
 		blocksPerChunk[chunkPosition][localPosition] = pair.second;
 	}
 
-	std::vector<Chunk*> dirtyChunks;
 	for (const auto& [chunkPosition, blocks] : blocksPerChunk)
 	{
 		Chunk* chunk = getChunkAt(chunkPosition);
@@ -237,26 +257,23 @@ void World::setBlocks(const std::unordered_map<Vector, unsigned char>& blocks)
 			{
 				pendingBlocks[chunkPosition][blockPosition] = blockID;
 			}
+			
 			continue;
 		}
 
 		for (const auto& [blockPosition, blockID] : blocks)
 		{
 			chunk->setBlock(blockPosition, blockID);
-			chunk->markDirty(true);
-			worldGenerator.requestCleaning(chunk);
 		}
-
-		dirtyChunks.push_back(chunk);
 	}
 
-	blocksPerChunk.clear();
-
-	worldGenerator.requestCleaning(dirtyChunks);
+	pendingBlocksMutex.unlock();
 }
 
 void World::setBlocks(const std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>>& blocks)
 {
+	pendingBlocksMutex.lock();
+
 	for (auto& [chunkPosition, chunkBlocks] : blocks)
 	{
 		if (Chunk* chunk = getChunkAt(chunkPosition))
@@ -265,14 +282,16 @@ void World::setBlocks(const std::unordered_map<Vector, std::unordered_map<Vector
 			{
 				chunk->setBlock(blockPosition, blockID);
 			}
-
-			chunk->markDirty(true);
 		}
 		else
 		{
-			pendingBlocks[chunkPosition] = chunkBlocks;
+			for (auto& [blockPosition, blockID] : chunkBlocks)
+			{
+				pendingBlocks[chunkPosition][blockPosition] = blockID;
+			}
 		}
 	}
+	pendingBlocksMutex.unlock();
 }
 
 //std::optional<unsigned char> World::getBlockAt(int x, int y, int z)
@@ -313,20 +332,37 @@ Chunk* World::getChunkAt(int x, int y, int z)
 	}
 }
 
+std::unordered_map<Vector, unsigned char> World::exchangePendingBlocks(const Vector& chunkPosition, const std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>>& otherBlocks)
+{
+	pendingBlocksMutex.lock();
+
+	std::unordered_map<Vector, unsigned char> pendingBlocks = this->pendingBlocks[chunkPosition];
+	this->pendingBlocks.erase(chunkPosition);
+
+	for (auto& [otherChunkPosition, otherChunkBlocks] : otherBlocks)
+	{
+		this->pendingBlocks[otherChunkPosition] = otherChunkBlocks;
+	}
+
+	pendingBlocksMutex.unlock();
+
+	return pendingBlocks;
+}
+
 std::vector<Vector> World::getChunkPositionsToLoad() const
 {
 	std::vector<Vector> positions;
 
-	bool forTesting = true;
+	bool forTesting = false;
 
 	if (forTesting)
 	{
-		int testRadius = 4;
+		int testRadius = 8;
 		for (int x = -testRadius; x <= testRadius; x++)
 		{
 			for (int z = -testRadius; z <= testRadius; z++)
 			{
-				positions.push_back({ x * 16, 0, z * 16 });
+				positions.push_back({ x, 0, z });
 			}
 		}
 	}
@@ -336,7 +372,7 @@ std::vector<Vector> World::getChunkPositionsToLoad() const
 		{
 			for (int z = -renderRadius; z <= renderRadius; z++)
 			{
-				positions.push_back({ x * 16, 0, z * 16 });
+				positions.push_back({ x, 0, z });
 			}
 		}
 	}

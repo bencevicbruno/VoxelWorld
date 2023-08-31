@@ -58,6 +58,8 @@ public:
 	Mesh getWestFace(Vector position, Color color = Color::CreateFromRGB(170, 170, 170)) const;
 	Mesh getEastFace(Vector position, Color color = Color::CreateFromRGB(170, 170, 170)) const;
 
+	Mesh getCrossMesh(Vector position, Color color = Color::CreateFromRGB(200, 200, 200)) const;
+
 private:
 	UVPosition topTexturePosition;
 	UVPosition bottomTexturePosition;

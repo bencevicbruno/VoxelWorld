@@ -1,8 +1,16 @@
 #include "world/decoration/OakTreeWorldDecoration.h"
 
+#include "utils/debug/Debug.h"
+
 std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> OakTreeWorldDecoration::getBlocks(const Vector& startPosition) const
 {
 	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> blocks;
+
+	// 32 is seaLevel
+	if (startPosition.y <= 32)
+	{
+		return blocks;
+	}
 
 	for (int y = startPosition.y; y <= startPosition.y + 5; y++)
 	{
@@ -24,13 +32,11 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> OakTreeWor
 	{
 		for (int dz = -1; dz <= 1; dz++)
 		{
-			if (dx == 0 && dz == 0) continue;
-
 			addBlock(blocks, { startPosition.x + dx, startPosition.y + 6, startPosition.z + dz }, BLOCK_OAK_LEAVES);
 		}
 	}
 
 	addBlock(blocks, { startPosition.x, startPosition.y + 7, startPosition.z}, BLOCK_OAK_LEAVES);
-
+	//Debug::printBlocksInChunks(blocks);
 	return blocks;
 }

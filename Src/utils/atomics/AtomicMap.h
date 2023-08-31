@@ -4,8 +4,6 @@
 #include <optional>
 #include <unordered_map>
 
-#include "world/Chunk.h"
-
 template<typename Key, typename Value>
 class AtomicMap
 {
@@ -58,5 +56,3 @@ private:
 	std::mutex accessMutex;
 	std::unordered_map<Key, Value> map;
 };
-
-using ChunkMap = AtomicMap<Vector, Chunk*>;

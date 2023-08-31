@@ -75,7 +75,7 @@ Image Image::CreateFromPerlinNoise(int size, int seed, unsigned char (*lambda)(d
 	{
 		for (int j = 0; j < size; j++)
 		{			
-			unsigned char value = lambda(noiseGenerator.get01((float) j / (float) size * 2 , (float)i / (float) size * 2));
+			unsigned char value = lambda(noiseGenerator.get((float) j / (float) size * 2 , (float)i / (float) size * 2));
 			image.data[4 * (size * i + j) + 0] = value;
 			image.data[4 * (size * i + j) + 1] = value;
 			image.data[4 * (size * i + j) + 2] = value;
