@@ -11,6 +11,7 @@
 #include "utils/atomics/AtomicSet.h"
 #include "math/Vector.h"
 #include "world/terrain/TerrainGenerator.h"
+#include "world/decorator/TerrainDecorator.h"
 
 #include "Options.h"
 
@@ -36,6 +37,7 @@ private:
 	bool shouldStop;
 	std::thread generatorThreads[GENERATORS_COUNT];
 	TerrainGenerator* terrainGenerator;
+	std::vector<TerrainDecorator*> terrainDecorators;
 
 	std::mutex requestedPositionsMutex;
 	std::vector<Vector> requestedPositions;

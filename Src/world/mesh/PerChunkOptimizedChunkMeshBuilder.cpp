@@ -19,65 +19,125 @@ ChunkMesh* PerChunkOptimizedChunkMeshBuilder::generateMesh(Chunk* chunk) const
 				if (currentBlockID == 0) continue;
 
 				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
-				Mesh& mesh = chunkMesh->getMeshForBlockID(currentBlockID);
+				Block& waterSurfaceBlock = blockRegistry.getBlockByID(BLOCK_WATER_SURFACE);
 
-				if (currentBlockID == BLOCK_TALL_GRASS || currentBlockID == BLOCK_FLOWER_YELLOW || currentBlockID == BLOCK_FLOWER_RED)
+				Mesh& mesh = chunkMesh->getMeshForBlockID(currentBlockID);
+				Mesh& waterMesh = chunkMesh->getMeshForBlockID(BLOCK_WATER);
+
+				bool isSedge = currentBlockID == BLOCK_SEDGE || currentBlockID == BLOCK_SEDGE_TOP;
+
+				if (currentBlockID == BLOCK_TALL_GRASS
+					|| currentBlockID == BLOCK_FLOWER_YELLOW
+					|| currentBlockID == BLOCK_FLOWER_RED)
 				{
 					mesh.addMesh(currentBlock.mesh.getCrossMesh({ x, y, z }));
 					continue;
 				}
 
+				if (isSedge)
+				{
+					mesh.addMesh(currentBlock.mesh.getCrossMesh({ x, y, z }));
+				}
+
 				// BOTTOM FACE
 				if (auto blockID = chunk->getBlockAt(x, y - 1, z))
 				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
+					if (!isSedge && shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
 					{
 						mesh.addMesh(currentBlock.mesh.getBottomFace({ x, y, z }));
+					}
+
+					if (currentBlockID == BLOCK_SEDGE)
+					{
+						if (shouldRenderSide(waterSurfaceBlock, blockRegistry.getBlockByID(*blockID)))
+						{
+							waterMesh.addMesh(waterSurfaceBlock.mesh.getBottomFace({ x, y, z }));
+						}
 					}
 				}
 
 				// TOP FACE
 				if (auto blockID = chunk->getBlockAt(x, y + 1, z))
 				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
+					if (!isSedge && shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
 					{
 						mesh.addMesh(currentBlock.mesh.getTopFace({ x, y, z }));
+					}
+
+					if (currentBlockID == BLOCK_SEDGE)
+					{
+						if (shouldRenderSide(waterSurfaceBlock, blockRegistry.getBlockByID(*blockID)))
+						{
+							waterMesh.addMesh(waterSurfaceBlock.mesh.getTopFace({ x, y, z }));
+						}
 					}
 				}
 
 				// NORTH FACE
 				if (auto blockID = chunk->getBlockAt(x, y, z - 1))
 				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
+					if (!isSedge && shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
 					{
 						mesh.addMesh(currentBlock.mesh.getNorthFace({ x, y, z }));
+					}
+
+					if (currentBlockID == BLOCK_SEDGE)
+					{
+						if (shouldRenderSide(waterSurfaceBlock, blockRegistry.getBlockByID(*blockID)))
+						{
+							waterMesh.addMesh(waterSurfaceBlock.mesh.getNorthFace({ x, y, z }));
+						}
 					}
 				}
 
 				// SOUTH FACE
 				if (auto blockID = chunk->getBlockAt(x, y, z + 1))
 				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
+					if (!isSedge && shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
 					{
 						mesh.addMesh(currentBlock.mesh.getSouthFace({ x, y, z }));
+					}
+
+					if (currentBlockID == BLOCK_SEDGE)
+					{
+						if (shouldRenderSide(waterSurfaceBlock, blockRegistry.getBlockByID(*blockID)))
+						{
+							waterMesh.addMesh(waterSurfaceBlock.mesh.getSouthFace({ x, y, z }));
+						}
 					}
 				}
 
 				// WEST FACE
 				if (auto blockID = chunk->getBlockAt(x - 1, y, z))
 				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
+					if (!isSedge && shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
 					{
 						mesh.addMesh(currentBlock.mesh.getWestFace({ x, y, z }));
+					}
+
+					if (currentBlockID == BLOCK_SEDGE)
+					{
+						if (shouldRenderSide(waterSurfaceBlock, blockRegistry.getBlockByID(*blockID)))
+						{
+							waterMesh.addMesh(waterSurfaceBlock.mesh.getWestFace({ x, y, z }));
+						}
 					}
 				}
 
 				// EAST FACE
 				if (auto blockID = chunk->getBlockAt(x + 1, y, z))
 				{
-					if (shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
+					if (!isSedge && shouldRenderSide(currentBlock, blockRegistry.getBlockByID(*blockID)))
 					{
 						mesh.addMesh(currentBlock.mesh.getEastFace({ x, y, z }));
+					}
+
+					if (currentBlockID == BLOCK_SEDGE)
+					{
+						if (shouldRenderSide(waterSurfaceBlock, blockRegistry.getBlockByID(*blockID)))
+						{
+							waterMesh.addMesh(waterSurfaceBlock.mesh.getEastFace({ x, y, z }));
+						}
 					}
 				}
 			}
@@ -89,14 +149,18 @@ ChunkMesh* PerChunkOptimizedChunkMeshBuilder::generateMesh(Chunk* chunk) const
 
 bool PerChunkOptimizedChunkMeshBuilder::shouldRenderSide(const Block& block, const Block& neighbouringBlock) const
 {
+	if (block.id == BLOCK_AIR) return false;
+
+	if (neighbouringBlock.id == BLOCK_AIR) return true;
+
 	switch (block.opacity)
 	{
 	case BlockOpacity::OPAQUE:
 		return neighbouringBlock.opacity != BlockOpacity::OPAQUE;
 	case BlockOpacity::SEE_THROUGH:
-		return (block != neighbouringBlock) && ((neighbouringBlock.opacity == BlockOpacity::TRANSPARENT) || (neighbouringBlock.opacity == BlockOpacity::EMPTY));
+		return (block != neighbouringBlock) && (neighbouringBlock.opacity != BlockOpacity::OPAQUE);
 	case BlockOpacity::TRANSPARENT:
-		return (block != neighbouringBlock) && (neighbouringBlock.opacity == BlockOpacity::EMPTY);
+		return (block != neighbouringBlock) && (neighbouringBlock.opacity == BlockOpacity::EMPTY ||neighbouringBlock.opacity == BlockOpacity::SEE_THROUGH);
 	default:
 		return false;
 	}

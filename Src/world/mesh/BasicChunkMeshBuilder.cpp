@@ -19,11 +19,26 @@ ChunkMesh* BasicChunkMeshBuilder::generateMesh(Chunk* chunk) const
 
 				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
 				Mesh& mesh = chunkMesh->getMeshForBlockID(currentBlockID);
+				Mesh& waterMesh = chunkMesh->getMeshForBlockID(BLOCK_WATER);
 
-				if (currentBlockID == BLOCK_TALL_GRASS || currentBlockID == BLOCK_FLOWER_YELLOW || currentBlockID == BLOCK_FLOWER_RED)
+				if (currentBlockID == BLOCK_TALL_GRASS
+					|| currentBlockID == BLOCK_FLOWER_YELLOW
+					|| currentBlockID == BLOCK_FLOWER_RED)
 				{
 					mesh.addMesh(currentBlock.mesh.getCrossMesh({ x, y, z }));
 					continue;
+				}
+
+				if (currentBlockID == BLOCK_SEDGE
+					|| currentBlockID == BLOCK_SEDGE_TOP)
+				{
+					Block& waterBlock = blockRegistry.getBlockByID(BLOCK_WATER_SURFACE);
+					waterMesh.addMesh(waterBlock.mesh.getBottomFace({ x, y, z }));
+					waterMesh.addMesh(waterBlock.mesh.getTopFace({ x, y, z }));
+					waterMesh.addMesh(waterBlock.mesh.getNorthFace({ x, y, z }));
+					waterMesh.addMesh(waterBlock.mesh.getSouthFace({ x, y, z }));
+					waterMesh.addMesh(waterBlock.mesh.getWestFace({ x, y, z }));
+					waterMesh.addMesh(waterBlock.mesh.getEastFace({ x, y, z }));
 				}
 
 				mesh.addMesh(currentBlock.mesh.getBottomFace({ x, y, z }));

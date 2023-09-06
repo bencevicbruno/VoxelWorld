@@ -14,7 +14,9 @@
 #include "world/terrain/FirstWorkingTerrainGenerator.h"
 #include "world/terrain/BiomeNoiseTerrainGenerator.h"
 #include "world/terrain/MinecraftTerrainGenerator.h"
-#include "world/decoration/OakTreeWorldDecoration.h"
+#include "world/decorator/LakeDecorator.h"
+#include "world/decorator/SurfaceBlockDecorator.h"
+#include "world/decorator/LakeSurfaceDecorator.h"
 
 ChunkGenerator::ChunkGenerator(World* world, ChunkMesher* chunkMesher) :
 	seed(world->getSeed()),
@@ -23,6 +25,12 @@ ChunkGenerator::ChunkGenerator(World* world, ChunkMesher* chunkMesher) :
 	shouldStop(false),
 	terrainGenerator(new MinecraftNoiseGenerator(world->getSeed()))
 {
+	int lakeLevel = 20;
+
+	terrainDecorators.push_back(new LakeDecorator(lakeLevel));
+	terrainDecorators.push_back(new SurfaceBlockDecorator(seed, lakeLevel));
+	terrainDecorators.push_back(new LakeSurfaceDecorator(lakeLevel));
+
 	for (int i = 0; i < GENERATORS_COUNT; i++)
 	{
 		generatorThreads[i] = std::thread(&ChunkGenerator::runLoop, this);
@@ -37,6 +45,11 @@ ChunkGenerator::~ChunkGenerator()
 	{
 		if (!generatorThreads[i].joinable()) continue;
 		generatorThreads[i].join();
+	}
+
+	for (TerrainDecorator* decorator : terrainDecorators)
+	{
+		delete decorator;
 	}
 
 	delete terrainGenerator;
@@ -88,31 +101,35 @@ void ChunkGenerator::runLoop()
 
 void ChunkGenerator::generateTerrain(const Vector& chunkPosition)
 {
-	int globalX = int(chunkPosition.x * 16);
-	int globalZ = int(chunkPosition.z * 16);
-	int height = terrainGenerator->getHeight(globalX, globalZ);
+	int* heightMap = terrainGenerator->generateHeightMap(int(chunkPosition.x), int(chunkPosition.z));
 
 	// 1) Generate the terrain
-	unsigned char* blocks = terrainGenerator->generateTerrain(seed, chunkPosition, {});
+	unsigned char* blocks = terrainGenerator->generateTerrain(seed, chunkPosition, heightMap);
 
 	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> blockOverrides;
 
 	// 2) Add decorations to this chunk
-	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> treeDecoration = OakTreeWorldDecoration().getBlocks({ globalX, height, globalZ });
+	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> neighbourDecorations;
+
+	for (TerrainDecorator* decorator : terrainDecorators)
+	{
+		auto decoration = std::move(decorator->decorate(chunkPosition, blocks, heightMap));
+		neighbourDecorations.insert(decoration.begin(), decoration.end());
+	}
 	//blockOverrides.insert(treeDecoration.begin(), treeDecoration.end());
 
-	for (auto& [position, blockID] : treeDecoration[chunkPosition])
-	{
-		blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
-	}
-	treeDecoration.erase(chunkPosition);
+	//for (auto& [position, blockID] : treeDecoration[chunkPosition])
+	//{
+	//	blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
+	//}
+	//treeDecoration.erase(chunkPosition);
 
 	// 3) Add any blocks that are waiting to be added to this chunk
-	std::unordered_map<Vector, unsigned char> pendingBlocks = world->exchangePendingBlocks(chunkPosition, treeDecoration);
-	for (auto& [position, blockID] : pendingBlocks)
-	{
-		blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
-	}
+	//std::unordered_map<Vector, unsigned char> pendingBlocks = world->exchangePendingBlocks(chunkPosition, neighbourDecorations);
+	//for (auto& [position, blockID] : pendingBlocks)
+	//{
+	//	blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
+	//}
 
 	Chunk* newChunk = new Chunk(chunkPosition, world, blocks);
 	chunkMesher->requestMesh(newChunk);

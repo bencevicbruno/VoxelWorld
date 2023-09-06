@@ -21,6 +21,16 @@ PerlinNoiseGenerator::PerlinNoiseGenerator(unsigned int seed, double constant) :
 	PerlinNoiseGenerator(seed, constant, constant, constant)
 {}
 
+PerlinNoiseGenerator::PerlinNoiseGenerator(unsigned int seed, FastNoiseLite::NoiseType noiseType, double constant) :
+	seed(seed),
+	constantX(constant),
+	constantY(constant),
+	constantZ(constant)
+{
+	perlinNoise.SetNoiseType(noiseType);
+	perlinNoise.SetSeed(seed);
+}
+
 PerlinNoiseGenerator::PerlinNoiseGenerator(unsigned int seed, double constantX, double constantY, double constantZ) :
 	seed(seed),
 	constantX(constantX),
@@ -28,6 +38,16 @@ PerlinNoiseGenerator::PerlinNoiseGenerator(unsigned int seed, double constantX, 
 	constantZ(constantZ)
 {
 	perlinNoise.SetNoiseType(FastNoiseLite::NoiseType_OpenSimplex2);
+	perlinNoise.SetSeed(seed);
+}
+
+PerlinNoiseGenerator::PerlinNoiseGenerator(unsigned int seed, FastNoiseLite::NoiseType noiseType, double constantX, double constantY, double constantZ) :
+	seed(seed),
+	constantX(constantX),
+	constantY(constantY),
+	constantZ(constantZ)
+{
+	perlinNoise.SetNoiseType(noiseType);
 	perlinNoise.SetSeed(seed);
 }
 

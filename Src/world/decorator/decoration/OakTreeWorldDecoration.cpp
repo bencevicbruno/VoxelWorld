@@ -1,4 +1,4 @@
-#include "world/decoration/OakTreeWorldDecoration.h"
+#include "world/decorator/decoration/OakTreeWorldDecoration.h"
 
 #include "utils/debug/Debug.h"
 

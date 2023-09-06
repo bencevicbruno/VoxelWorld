@@ -105,4 +105,8 @@ void initBlockRegistry()
 	registry.registerBlock(BLOCK_GRAVEL, BlockMesh(UVPosition::FromAtlas(11, 0)), BlockOpacity::OPAQUE);
 	registry.registerBlock(BLOCK_FLOWER_YELLOW, BlockMesh(UVPosition::FromAtlas(12, 0)), BlockOpacity::SEE_THROUGH);
 	registry.registerBlock(BLOCK_FLOWER_RED, BlockMesh(UVPosition::FromAtlas(13, 0)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_PODZOL, BlockMesh(UVPosition::FromAtlas(15, 0), UVPosition::FromAtlas(1, 0), UVPosition::FromAtlas(14, 0)), BlockOpacity::OPAQUE);
+
+	registry.registerBlock(BLOCK_SEDGE, BlockMesh(UVPosition::FromAtlas(0, 2)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_SEDGE_TOP, BlockMesh(UVPosition::FromAtlas(0, 1)), BlockOpacity::SEE_THROUGH);
 }

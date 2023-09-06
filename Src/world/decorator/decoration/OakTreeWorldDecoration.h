@@ -1,6 +1,6 @@
 #pragma once
 
-#include "world/decoration/WorldDecoration.h"
+#include "world/decorator/decoration/WorldDecoration.h"
 
 class OakTreeWorldDecoration : public WorldDecoration
 {

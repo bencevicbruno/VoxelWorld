@@ -8,7 +8,7 @@ BiomeNoiseTerrainGenerator::BiomeNoiseTerrainGenerator(unsigned int seed) :
 	noiseGenerator(PerlinNoiseGenerator(seed, 0.01))
 {}
 
-unsigned char* BiomeNoiseTerrainGenerator::generateTerrain(unsigned int seed, const Vector& position, const std::unordered_map<Vector, unsigned char>& pendingBlocks) const
+unsigned char* BiomeNoiseTerrainGenerator::generateTerrain(unsigned int seed, const Vector& position, const int* heightMap) const
 {
 	PerlinNoiseGenerator decorationsNoiseGenerator(seed * 0.1, 1);
 
@@ -37,11 +37,6 @@ unsigned char* BiomeNoiseTerrainGenerator::generateTerrain(unsigned int seed, co
 			}
 
 		}
-	}
-
-	for (auto& [position, blockID] : pendingBlocks)
-	{
-		blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
 	}
 
 	return blocks;

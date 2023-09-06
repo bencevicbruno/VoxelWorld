@@ -22,12 +22,16 @@ ChunkMesh* OptimalChunkMeshBuilder::generateMesh(Chunk* chunk) const
 
 bool OptimalChunkMeshBuilder::shouldRenderSide(const Block& block, const Block& neighbouringBlock) const
 {
+	if (block.id == BLOCK_AIR) return false;
+
+	if (neighbouringBlock.id == BLOCK_AIR) return true;
+
 	switch (block.opacity)
 	{
 	case BlockOpacity::OPAQUE:
 		return neighbouringBlock.opacity != BlockOpacity::OPAQUE;
 	case BlockOpacity::SEE_THROUGH:
-		return (block != neighbouringBlock) && ((neighbouringBlock.opacity == BlockOpacity::TRANSPARENT) || (neighbouringBlock.opacity == BlockOpacity::EMPTY));
+		return (block != neighbouringBlock) && (neighbouringBlock.opacity != BlockOpacity::OPAQUE);
 	case BlockOpacity::TRANSPARENT:
 		return (block != neighbouringBlock) && (neighbouringBlock.opacity == BlockOpacity::EMPTY);
 	default:
@@ -51,7 +55,11 @@ void OptimalChunkMeshBuilder::generateMiddle(Chunk* chunk, ChunkMesh& chunkMesh)
 				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
 				Mesh& mesh = chunkMesh.getMeshForBlockID(currentBlockID);
 
-				if (currentBlockID == BLOCK_TALL_GRASS || currentBlockID == BLOCK_FLOWER_YELLOW || currentBlockID == BLOCK_FLOWER_RED)
+				if (currentBlockID == BLOCK_TALL_GRASS
+					|| currentBlockID == BLOCK_FLOWER_YELLOW
+					|| currentBlockID == BLOCK_FLOWER_RED
+					|| currentBlockID == BLOCK_SEDGE
+					|| currentBlockID == BLOCK_SEDGE_TOP)
 				{
 					mesh.addMesh(currentBlock.mesh.getCrossMesh({ x, y, z }));
 					continue;

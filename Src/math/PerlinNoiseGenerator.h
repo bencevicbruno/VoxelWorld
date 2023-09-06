@@ -11,7 +11,9 @@ class PerlinNoiseGenerator
 public:
 	PerlinNoiseGenerator();
 	PerlinNoiseGenerator(unsigned int seed, double constant = 1);
+	PerlinNoiseGenerator(unsigned int seed, FastNoiseLite::NoiseType noiseType, double constant = 1);
 	PerlinNoiseGenerator(unsigned int seed, double constanX, double constantY, double constantZ);
+	PerlinNoiseGenerator(unsigned int seed, FastNoiseLite::NoiseType noiseType, double constanX, double constantY, double constantZ);
 
 	double get(double x, double y) const;
 	double get(int x, int y) const;

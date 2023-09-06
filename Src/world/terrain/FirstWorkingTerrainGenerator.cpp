@@ -11,7 +11,7 @@ FirstWorkingTerrainGenerator::FirstWorkingTerrainGenerator(unsigned int seed) :
 	coverGenerator(PerlinNoiseGenerator(seed, 0.005))
 {}
 
-unsigned char* FirstWorkingTerrainGenerator::generateTerrain(unsigned int seed, const Vector& position, const std::unordered_map<Vector, unsigned char>& pendingBlocks) const
+unsigned char* FirstWorkingTerrainGenerator::generateTerrain(unsigned int seed, const Vector& position, const int* heightMap) const
 {
 	unsigned char* blocks = new unsigned char[CHUNK_WIDTH * CHUNK_WIDTH * CHUNK_HEIGHT];
 
@@ -66,12 +66,6 @@ unsigned char* FirstWorkingTerrainGenerator::generateTerrain(unsigned int seed, 
 				}
 			}
 		}
-	}
-
-	std::cout << pendingBlocks.size() << std::endl;
-	for (auto& [position, blockID] : pendingBlocks)
-	{
-		blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
 	}
 
 	return blocks;

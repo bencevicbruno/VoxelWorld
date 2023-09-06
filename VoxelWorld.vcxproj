@@ -215,8 +215,11 @@
     <ClCompile Include="Src\world\chunk\Chunk.cpp" />
     <ClCompile Include="Src\world\chunk\ChunkMesh.cpp" />
     <ClCompile Include="Src\world\chunk\ChunkMesher.cpp" />
-    <ClCompile Include="Src\world\decoration\OakTreeWorldDecoration.cpp" />
-    <ClCompile Include="Src\world\decoration\WorldDecoration.cpp" />
+    <ClCompile Include="Src\world\decorator\decoration\OakTreeWorldDecoration.cpp" />
+    <ClCompile Include="Src\world\decorator\decoration\WorldDecoration.cpp" />
+    <ClCompile Include="Src\world\decorator\LakeDecorator.cpp" />
+    <ClCompile Include="Src\world\decorator\LakeSurfaceDecorator.cpp" />
+    <ClCompile Include="Src\world\decorator\SurfaceBlockDecorator.cpp" />
     <ClCompile Include="Src\world\mesh\BasicChunkMeshBuilder.cpp" />
     <ClCompile Include="Src\world\mesh\OptimalChunkMeshBuilder.cpp" />
     <ClCompile Include="Src\world\mesh\PerChunkOptimizedChunkMeshBuilder.cpp" />
@@ -363,7 +366,11 @@
     <ClInclude Include="Src\world\chunk\Chunk.h" />
     <ClInclude Include="Src\world\chunk\ChunkMesh.h" />
     <ClInclude Include="Src\world\chunk\ChunkMesher.h" />
-    <ClInclude Include="Src\world\decoration\OakTreeWorldDecoration.h" />
+    <ClInclude Include="Src\world\decorator\decoration\OakTreeWorldDecoration.h" />
+    <ClInclude Include="Src\world\decorator\LakeDecorator.h" />
+    <ClInclude Include="Src\world\decorator\LakeSurfaceDecorator.h" />
+    <ClInclude Include="Src\world\decorator\SurfaceBlockDecorator.h" />
+    <ClInclude Include="Src\world\decorator\TerrainDecorator.h" />
     <ClInclude Include="Src\world\mesh\BasicChunkMeshBuilder.h" />
     <ClInclude Include="Src\world\mesh\ChunkMeshBuilder.h" />
     <ClInclude Include="Src\world\mesh\OptimalChunkMeshBuilder.h" />
@@ -375,7 +382,7 @@
     <ClInclude Include="Src\world\utils\BlockRegistry.h" />
     <ClInclude Include="Src\world\utils\BlockRegistryException.h" />
     <ClInclude Include="Src\world\World.h" />
-    <ClInclude Include="Src\world\decoration\WorldDecoration.h" />
+    <ClInclude Include="Src\world\decorator\decoration\WorldDecoration.h" />
     <ClInclude Include="Src\world\chunk\ChunkGenerator.h" />
     <ClInclude Include="Src\_tests\FileManagerTests.h" />
     <ClInclude Include="Src\_tests\ImageManagerTests.h" />
