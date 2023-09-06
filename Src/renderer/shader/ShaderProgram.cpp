@@ -5,7 +5,7 @@
 #include <utils/Utils.h>
 
 ShaderProgram::ShaderProgram() :
-	ID(0), 
+	ID(0),
 	name("")
 {}
 

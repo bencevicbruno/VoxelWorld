@@ -60,13 +60,13 @@ Buffer Buffer::CreateIndex(const std::vector<unsigned int>& data)
 	return Buffer(data);
 }
 
-Buffer::Buffer(const std::vector<float>& data):
+Buffer::Buffer(const std::vector<float>& data) :
 	type(Type::VERTEX),
 	count(data.size())
 {
 	glGenBuffers(1, &ID);
 	bind();
-	
+
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), data.data(), GL_STATIC_DRAW);
 }
 

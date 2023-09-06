@@ -19,8 +19,8 @@ const Camera& Camera::getActiveCamera()
 	return *activeCamera;
 }
 
-Camera::Camera():
-	position({0, 128, 0, 0}),
+Camera::Camera() :
+	position({ 0, 64, 0, 0 }),
 	yaw(180), pitch(-45),
 	fov(90.0f), // BACK TO 80.0F
 	controller(CameraController(this, 0.01f, 0.5f, 0.1f))
@@ -106,7 +106,7 @@ void Camera::update()
 Matrix Camera::getViewMatrix() const
 {
 	return {
-		rightVector.x, rightVector.y, rightVector.z, - Vector::DotProduct(rightVector, position),
+		rightVector.x, rightVector.y, rightVector.z, -Vector::DotProduct(rightVector, position),
 		upVector.x, upVector.y, upVector.z, -Vector::DotProduct(upVector, position),
 		-frontVector.x, -frontVector.y, -frontVector.z, Vector::DotProduct(frontVector, position),
 		0, 0, 0, 1 };
@@ -119,7 +119,7 @@ Matrix Camera::getProjectionMatrix() const
 	Matrix matrix;
 
 	float fov = Math::ToRadians(this->fov);
-	float aspectRatio = (float) Window::WIDTH / Window::HEIGHT;
+	float aspectRatio = (float)Window::WIDTH / Window::HEIGHT;
 	float tanHalfFov = std::tan(fov / 2);
 
 	matrix.data[0][0] = 1 / (aspectRatio * tanHalfFov);

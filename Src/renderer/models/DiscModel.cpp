@@ -35,7 +35,7 @@ DiscModel& DiscModel::operator=(DiscModel&& other) noexcept
 	BaseModel::operator=(std::move(*this));
 	innerRadius = std::exchange(other.innerRadius, 0.0f);
 	outerRadius = std::exchange(other.outerRadius, 0.0f);
-	stepCount =std::exchange(other.stepCount, 0);
+	stepCount = std::exchange(other.stepCount, 0);
 
 	return *this;
 }

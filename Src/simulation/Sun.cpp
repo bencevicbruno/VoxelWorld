@@ -3,7 +3,7 @@
 #include "renderer/camera/Camera.h"
 #include "renderer/shader/ShaderProgramRegistry.h"
 
-Sun::Sun():
+Sun::Sun() :
 	radius(10.0f),
 	mass(3330542.53f),
 	model(SphereModel(radius, 51, 0.0f, 0.0f)),
@@ -33,7 +33,7 @@ void Sun::render() const
 	const ShaderProgram& shaderProgram = ShaderProgramRegistry::GetInstance().getShaderProgram("sun");
 
 	shaderProgram.use();
-	shaderProgram.setMatrix("projection_view", 
+	shaderProgram.setMatrix("projection_view",
 		camera.getProjectionMatrix() * camera.getViewMatrix());
 
 	texture.bindToUnit(0);

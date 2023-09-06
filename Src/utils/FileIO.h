@@ -6,4 +6,3 @@ namespace FileIO
 {
 	std::string LoadLines(const std::string& fileLocation);
 }
-

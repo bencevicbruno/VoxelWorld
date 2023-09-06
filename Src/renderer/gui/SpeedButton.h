@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "renderer/wrappers/VertexArray.h"
 #include "renderer/wrappers/Buffer.h"
 #include <renderer/wrappers/Texture.h>
@@ -29,7 +28,7 @@ public:
 
 private:
 	int x, y;
-	
+
 	Texture texture, textureHovered, textureSelected;
 	float speedFactor;
 	bool selected;
@@ -43,4 +42,3 @@ private:
 	SpeedButton(const SpeedButton& other) = delete;
 	SpeedButton& operator=(const SpeedButton& other) = delete;
 };
-

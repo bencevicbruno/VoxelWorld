@@ -9,7 +9,7 @@ RingedPlanet::RingedPlanet() :
 	ringAngleOffset(0.0f)
 {}
 
-RingedPlanet::RingedPlanet(std::string name, float radius, float mass, float rotationSpeed, 
+RingedPlanet::RingedPlanet(std::string name, float radius, float mass, float rotationSpeed,
 	float revolutionSpeed, float distanceFromSun, float innerRingRadius, float outerRingRadius) :
 	Planet(name, radius, mass, rotationSpeed, revolutionSpeed, distanceFromSun),
 	ringAngleOffset(Math::CreateRandom(10.0f, 60.0f)),
@@ -47,7 +47,7 @@ void RingedPlanet::render() const
 	shaderProgram.use();
 	shaderProgram.setMatrix("projection_view", camera.getProjectionMatrix() * camera.getViewMatrix());
 	shaderProgram.setVector("view_position", camera.getPosition());
-	shaderProgram.setColor("highlight", this->isSelected() ? 
+	shaderProgram.setColor("highlight", this->isSelected() ?
 		Color::CreateFromRGB(128, 128, 128) : Color::CreateFromRGB(0, 0, 0));
 
 	Vector position = Vector::FromPolar(distanceFromSun, revolutionAngle, 0);
@@ -58,7 +58,6 @@ void RingedPlanet::render() const
 
 	texture.bindToUnit(0);
 	model.render();
-
 
 	shaderProgram.setMatrix("model", translation * rotation * ringOff);
 

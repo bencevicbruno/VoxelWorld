@@ -22,7 +22,7 @@ Planet::Planet(std::string name, float radius, float mass, float rotationSpeed, 
 		Texture::CreateFromImage("planet/" + name + ".png"), SphereModel(radius, 30, 0.0f, 0.0f))
 {}
 
-Planet::Planet(std::string name, float radius, float mass, float rotationSpeed, float revolutionSpeed, 
+Planet::Planet(std::string name, float radius, float mass, float rotationSpeed, float revolutionSpeed,
 	float distanceFromSun, float rotationAngle, float revolutionAngle, float revolutionPitch, Texture texture, SphereModel model) :
 	name(name),
 	radius(radius),
@@ -88,7 +88,7 @@ void Planet::update(float deltaTime)
 	revolutionAngle += revolutionSpeed * deltaTime;
 	rotationAngle += rotationSpeed * deltaTime;
 
-	float pitch = (float) std::sin(revolutionAngle * 0.01);
+	float pitch = (float)std::sin(revolutionAngle * 0.01);
 	pitch *= 80;
 
 	revolutionPitch = pitch;
@@ -150,6 +150,6 @@ Planet* Planet::CreateRandom()
 	Texture texture = Texture::CreateFromColor(Color::CreateRandom());
 	SphereModel model = SphereModel(radius, 30, 0.0f, 10.0f);
 
-	return new Planet(name, radius, mass, rotationSpeed, revolutionSpeed, 
+	return new Planet(name, radius, mass, rotationSpeed, revolutionSpeed,
 		distanceFromSun, 0.0f, revolutionAngle, revolutionPitch, std::move(texture), std::move(model));
 }

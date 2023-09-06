@@ -39,7 +39,7 @@ FontManager::~FontManager()
 FontManager::FontManager()
 {
 	Image& image = ImageManager::GetInstance().getImage("gui/font.png");// Image::Load("gui/font.png", true);
-	
+
 	for (int ID = 0; ID < 256; ID++)
 	{
 		int row = ID / 16;
@@ -61,12 +61,11 @@ FontManager::FontManager()
 			}
 		}
 
-		glyphMap[ID] = new Glyph(maxX - startX + 1, maxY - startY + 1, 
-			(float)startX / 256.0f, (float)startY / 256.0f, 
+		glyphMap[ID] = new Glyph(maxX - startX + 1, maxY - startY + 1,
+			(float)startX / 256.0f, (float)startY / 256.0f,
 			(float)(maxX + 1) / 256.0f, (float)(startY + 16) / 256.0f);
 	}
 
 	texture = Texture::CreateFromImage(image);
 	texture.setWrapAndFilterForGUI();
 }
-

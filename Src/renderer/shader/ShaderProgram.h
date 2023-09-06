@@ -29,7 +29,7 @@ public:
 	void setVector(const std::string& name, const Vector& vector) const;
 	void setMatrix(const std::string& name, const Matrix& matrix) const;
 	void setColor(const std::string& name, const Color& color) const;
-	
+
 private:
 	unsigned int ID;
 	std::string name;
@@ -38,4 +38,3 @@ private:
 
 	int getUniformLocation(const std::string& uniformName) const;
 };
-

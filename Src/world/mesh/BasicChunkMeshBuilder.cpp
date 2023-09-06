@@ -23,9 +23,28 @@ ChunkMesh* BasicChunkMeshBuilder::generateMesh(Chunk* chunk) const
 
 				if (currentBlockID == BLOCK_TALL_GRASS
 					|| currentBlockID == BLOCK_FLOWER_YELLOW
-					|| currentBlockID == BLOCK_FLOWER_RED)
+					|| currentBlockID == BLOCK_FLOWER_RED
+					|| currentBlockID == BLOCK_HUGE_GRASS
+					|| currentBlockID == BLOCK_HUGE_GRASS_TOP
+					|| currentBlockID == BLOCK_MUSHROOM_BROWN
+					|| currentBlockID == BLOCK_MUSHROOM_RED
+					|| currentBlockID == BLOCK_SPEACIAL_FLOWER)
 				{
 					mesh.addMesh(currentBlock.mesh.getCrossMesh({ x, y, z }));
+					continue;
+				}
+
+				if (currentBlockID == BLOCK_LILY_PAD
+					|| currentBlockID == BLOCK_LILY_PADS)
+				{
+					mesh.addMesh(currentBlock.mesh.getBottomFace({ x, y, z }));
+					mesh.addMesh(currentBlock.mesh.getTopFace({ x, y, z }));
+					continue;
+				}
+
+				if (currentBlockID == BLOCK_DEAD_LEAVES)
+				{
+					mesh.addMesh(currentBlock.mesh.getTopFace({ x, y, z }));
 					continue;
 				}
 

@@ -21,6 +21,3 @@ private:
 	Texture3D(const Texture3D& other) = delete;
 	void operator=(const Texture3D& other) = delete;
 };
-
-
-

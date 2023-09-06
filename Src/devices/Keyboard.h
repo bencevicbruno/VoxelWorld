@@ -12,7 +12,7 @@ public:
 	void init(GLFWwindow* pWindow);
 
 	static bool isKeyDown(int keyCode);
-	
+
 private:
 	bool keyState[GLFW_KEY_LAST];
 
@@ -23,4 +23,3 @@ private:
 	void operator=(const Keyboard& other) = delete;
 	void operator=(Keyboard&& other) = delete;
 };
-

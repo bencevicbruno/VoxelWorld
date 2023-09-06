@@ -20,6 +20,11 @@ struct Box
 		minX(minX), minY(minY), minZ(minZ),
 		maxX(maxX), maxY(maxY), maxZ(maxZ)
 	{};
+
+	Box(float min, float max, float height):
+		minX(min), minY(-0.5), minZ(min),
+		maxX(max), maxY(-0.5 + height), maxZ(max)
+	{};
 };
 
 class BlockMesh

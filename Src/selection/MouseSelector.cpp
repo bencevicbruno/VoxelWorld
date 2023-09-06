@@ -7,9 +7,9 @@
 #include "simulation/Asteroid.h"
 #include "simulation/Planet.h"
 
-MouseSelector::MouseSelector(SolarSystem& solarSystem):
-	currentRay({}), 
-	solarSystem(solarSystem), 
+MouseSelector::MouseSelector(SolarSystem& solarSystem) :
+	currentRay({}),
+	solarSystem(solarSystem),
 	selectedObject(nullptr)
 {}
 
@@ -40,7 +40,6 @@ Vector MouseSelector::toWorldCoords(Vector eyeCoords)
 
 	return worldCoords;
 }
-
 
 std::string MouseSelector::getSelectedObjectName() const
 {

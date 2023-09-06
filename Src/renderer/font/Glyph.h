@@ -22,4 +22,3 @@ private:
 	void operator=(const Glyph& other) = delete;
 	void operator=(Glyph&& other) = delete;
 };
-

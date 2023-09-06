@@ -17,4 +17,3 @@ public:
 	virtual float getRadius() const = 0;
 	virtual std::string getName() const = 0;
 };
-

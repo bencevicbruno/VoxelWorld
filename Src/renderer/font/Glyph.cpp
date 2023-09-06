@@ -1,6 +1,6 @@
 #include <renderer/font/Glyph.h>
 
-Glyph::Glyph(int width, int height, float minU, float minV, float maxU, float maxV):
+Glyph::Glyph(int width, int height, float minU, float minV, float maxU, float maxV) :
 	width(width), height(height), minU(minU), minV(minV), maxU(maxU), maxV(maxV)
 {
 }
@@ -34,4 +34,3 @@ float Glyph::getMaxV() const
 {
 	return maxV;
 }
-

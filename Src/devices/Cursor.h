@@ -30,7 +30,7 @@ private:
 	Cursor();
 
 	void onMove(int x, int y);
-	
+
 	Cursor(const Cursor& other) = delete;
 	Cursor(Cursor&& other) = delete;
 	void operator=(const Cursor& other) = delete;

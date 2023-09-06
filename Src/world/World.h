@@ -50,13 +50,12 @@ private:
 	Texture textureAtlas;
 
 	std::mutex pendingBlocksMutex;
-	
+
 	std::unordered_map<Vector, Chunk*> chunks;
 	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> pendingBlocks;
 
 	ChunkMesher chunkMesher;
 	ChunkGenerator chunkGenerator;
-	
 
 	AtomicVector<std::tuple<Chunk*, ChunkMesh*>> pendingChunks;
 	AtomicVector<std::tuple<Chunk*, ChunkMesh*>> cleanedChunks;

@@ -17,6 +17,9 @@
 #include "world/decorator/LakeDecorator.h"
 #include "world/decorator/SurfaceBlockDecorator.h"
 #include "world/decorator/LakeSurfaceDecorator.h"
+#include "world/decorator/ForestDecorator.h"
+#include "world/decorator/SurfaceVegetationDecorator.h"
+#include "world/decorator/SpecialDecorator.h"
 
 ChunkGenerator::ChunkGenerator(World* world, ChunkMesher* chunkMesher) :
 	seed(world->getSeed()),
@@ -30,6 +33,9 @@ ChunkGenerator::ChunkGenerator(World* world, ChunkMesher* chunkMesher) :
 	terrainDecorators.push_back(new LakeDecorator(lakeLevel));
 	terrainDecorators.push_back(new SurfaceBlockDecorator(seed, lakeLevel));
 	terrainDecorators.push_back(new LakeSurfaceDecorator(lakeLevel));
+	terrainDecorators.push_back(new ForestDecorator(seed, lakeLevel));
+	terrainDecorators.push_back(new SurfaceVegetationDecorator(seed));
+	terrainDecorators.push_back(new SpecialDecorator());
 
 	for (int i = 0; i < GENERATORS_COUNT; i++)
 	{
@@ -84,7 +90,7 @@ void ChunkGenerator::runLoop()
 		if (requestedPositions.empty())
 		{
 			this->requestedPositionsMutex.unlock();
-			
+
 			using namespace std::chrono_literals;
 			std::this_thread::sleep_for(100ms);
 
@@ -106,30 +112,27 @@ void ChunkGenerator::generateTerrain(const Vector& chunkPosition)
 	// 1) Generate the terrain
 	unsigned char* blocks = terrainGenerator->generateTerrain(seed, chunkPosition, heightMap);
 
-	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> blockOverrides;
-
 	// 2) Add decorations to this chunk
 	std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> neighbourDecorations;
 
 	for (TerrainDecorator* decorator : terrainDecorators)
 	{
-		auto decoration = std::move(decorator->decorate(chunkPosition, blocks, heightMap));
-		neighbourDecorations.insert(decoration.begin(), decoration.end());
-	}
-	//blockOverrides.insert(treeDecoration.begin(), treeDecoration.end());
+		auto decoration = decorator->decorate(chunkPosition, blocks, heightMap);
 
-	//for (auto& [position, blockID] : treeDecoration[chunkPosition])
-	//{
-	//	blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
-	//}
-	//treeDecoration.erase(chunkPosition);
+		for (auto& [chunkPosition, blocks] : decoration)
+		{
+			neighbourDecorations[chunkPosition].insert(blocks.begin(), blocks.end());
+		}
+	}
+
+	delete[] heightMap;
 
 	// 3) Add any blocks that are waiting to be added to this chunk
-	//std::unordered_map<Vector, unsigned char> pendingBlocks = world->exchangePendingBlocks(chunkPosition, neighbourDecorations);
-	//for (auto& [position, blockID] : pendingBlocks)
-	//{
-	//	blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
-	//}
+	std::unordered_map<Vector, unsigned char> pendingBlocks = world->exchangePendingBlocks(chunkPosition, neighbourDecorations);
+	for (auto& [position, blockID] : pendingBlocks)
+	{
+		blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
+	}
 
 	Chunk* newChunk = new Chunk(chunkPosition, world, blocks);
 	chunkMesher->requestMesh(newChunk);

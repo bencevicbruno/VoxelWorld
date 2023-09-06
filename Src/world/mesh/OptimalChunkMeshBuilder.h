@@ -9,7 +9,7 @@ public:
 	virtual ~OptimalChunkMeshBuilder() = default;
 
 	virtual ChunkMesh* generateMesh(Chunk* chunk) const;
-	
+
 private:
 	bool shouldRenderSide(const Block& block, const Block& neighbouringBlock) const;
 

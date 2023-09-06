@@ -1,10 +1,9 @@
 #pragma once
 
-#pragma warning(push, 0) 
+#pragma warning(push, 0)
 #pragma warning( disable : 26812)
 #include "FastNoiseLite.h"
 #pragma warning(pop)
-
 
 class PerlinNoiseGenerator
 {

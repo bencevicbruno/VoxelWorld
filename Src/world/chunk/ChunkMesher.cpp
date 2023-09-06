@@ -43,20 +43,19 @@ ChunkMesher::~ChunkMesher()
 		if (mesherThread[i].joinable())
 			mesherThread[i].join();
 	}
-	
+
 	for (int i = 0; i < REMESHERS_COUNT; i++)
 	{
 		if (remesherThread[i].joinable())
 			remesherThread[i].join();
 	}
-	
 
 	delete chunkMeshBuilder;
 }
 
 void ChunkMesher::requestMesh(Chunk* chunk)
 {
-	requestMeshes({chunk});
+	requestMeshes({ chunk });
 }
 
 void ChunkMesher::requestMeshes(const std::vector<Chunk*>& chunks)

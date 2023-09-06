@@ -30,4 +30,3 @@ private:
 	SkyboxModel(const SkyboxModel& other) = delete;
 	void operator=(const SkyboxModel& other) = delete;
 };
-

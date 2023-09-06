@@ -4,14 +4,14 @@
 #include "renderer/camera/Camera.h"
 #include "renderer/shader/ShaderProgramRegistry.h"
 
-Asteroid::Asteroid():
+Asteroid::Asteroid() :
 	name("Asteroid #" + std::to_string(std::rand())),
 	radius(Math::CreateRandom(0.1f, 0.5f)),
 	position(Vector::CreateRandom(-300.0f, 300.0f)),
 	velocity({}),
 	acceleration({}),
 	texture(Texture::CreateFromImage("asteroid.png")),
-	model(SphereModel(radius, (unsigned int) Math::CreateRandom(20, 30), Math::CreateRandom(0.8f, 1.2f), Math::CreateRandom(15.0f, 20.0f))),
+	model(SphereModel(radius, (unsigned int)Math::CreateRandom(20, 30), Math::CreateRandom(0.8f, 1.2f), Math::CreateRandom(15.0f, 20.0f))),
 	selected(false)
 {}
 

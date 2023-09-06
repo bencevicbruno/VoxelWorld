@@ -11,7 +11,7 @@ class Planet : public ISelectable
 public:
 	Planet();
 	Planet(std::string name, float radius, float mass, float rotationSpeed, float revolutionSpeed, float distanceFromSun);
-	Planet(std::string name, float radius, float mass, float rotationSpeed, float revolutionSpeed, float distanceFromSun, 
+	Planet(std::string name, float radius, float mass, float rotationSpeed, float revolutionSpeed, float distanceFromSun,
 		float rotationAngle, float revolutionAngle, float revolutionPitch, Texture texture, SphereModel model);
 	Planet(Planet&& other) noexcept;
 	Planet& operator=(Planet&& other) noexcept;
@@ -29,7 +29,7 @@ public:
 	Vector getPosition() const override;
 	float getRadius() const override;
 	std::string getName() const override;
-	
+
 	virtual ~Planet() = default;
 
 	static Planet* CreateRandom();

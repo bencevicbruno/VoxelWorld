@@ -217,9 +217,12 @@
     <ClCompile Include="Src\world\chunk\ChunkMesher.cpp" />
     <ClCompile Include="Src\world\decorator\decoration\OakTreeWorldDecoration.cpp" />
     <ClCompile Include="Src\world\decorator\decoration\WorldDecoration.cpp" />
+    <ClCompile Include="Src\world\decorator\ForestDecorator.cpp" />
     <ClCompile Include="Src\world\decorator\LakeDecorator.cpp" />
     <ClCompile Include="Src\world\decorator\LakeSurfaceDecorator.cpp" />
+    <ClCompile Include="Src\world\decorator\SpecialDecorator.cpp" />
     <ClCompile Include="Src\world\decorator\SurfaceBlockDecorator.cpp" />
+    <ClCompile Include="Src\world\decorator\SurfaceVegetationDecorator.cpp" />
     <ClCompile Include="Src\world\mesh\BasicChunkMeshBuilder.cpp" />
     <ClCompile Include="Src\world\mesh\OptimalChunkMeshBuilder.cpp" />
     <ClCompile Include="Src\world\mesh\PerChunkOptimizedChunkMeshBuilder.cpp" />
@@ -367,9 +370,12 @@
     <ClInclude Include="Src\world\chunk\ChunkMesh.h" />
     <ClInclude Include="Src\world\chunk\ChunkMesher.h" />
     <ClInclude Include="Src\world\decorator\decoration\OakTreeWorldDecoration.h" />
+    <ClInclude Include="Src\world\decorator\ForestDecorator.h" />
     <ClInclude Include="Src\world\decorator\LakeDecorator.h" />
     <ClInclude Include="Src\world\decorator\LakeSurfaceDecorator.h" />
+    <ClInclude Include="Src\world\decorator\SpecialDecorator.h" />
     <ClInclude Include="Src\world\decorator\SurfaceBlockDecorator.h" />
+    <ClInclude Include="Src\world\decorator\SurfaceVegetationDecorator.h" />
     <ClInclude Include="Src\world\decorator\TerrainDecorator.h" />
     <ClInclude Include="Src\world\mesh\BasicChunkMeshBuilder.h" />
     <ClInclude Include="Src\world\mesh\ChunkMeshBuilder.h" />

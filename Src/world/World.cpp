@@ -28,7 +28,6 @@ World::World(unsigned int seed, int renderRadius) :
 World::~World()
 {
 	for (auto& it : chunks) {
-		
 		delete it.second;
 	}
 }
@@ -57,7 +56,6 @@ void World::addCleanChunks(const std::vector<std::tuple<Chunk*, ChunkMesh*>>& ch
 {
 	cleanedChunks.append(chunks);
 }
-
 
 void World::update(const Vector& cameraPosition)
 {
@@ -257,7 +255,7 @@ void World::setBlocks(const std::unordered_map<Vector, unsigned char>& blocks)
 			{
 				pendingBlocks[chunkPosition][blockPosition] = blockID;
 			}
-			
+
 			continue;
 		}
 

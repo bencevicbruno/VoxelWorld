@@ -26,4 +26,3 @@ private:
 	Image(const Image& other) = delete;
 	void operator=(const Image& other) = delete;
 };
-

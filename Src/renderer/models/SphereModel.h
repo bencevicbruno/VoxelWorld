@@ -36,4 +36,3 @@ private:
 	SphereModel(const SphereModel& other) = delete;
 	void operator=(const SphereModel& other) = delete;
 };
-

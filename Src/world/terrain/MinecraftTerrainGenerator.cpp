@@ -2,16 +2,17 @@
 
 #include <iostream>
 
+#include "math/Math.h"
 #include "utils/debug/Debug.h"
 #include "world/chunk/Chunk.h"
 
-MinecraftNoiseGenerator::MinecraftNoiseGenerator(unsigned int seed):
+MinecraftNoiseGenerator::MinecraftNoiseGenerator(unsigned int seed) :
 	seaBed(16),
 	continentalnessGenerator(PerlinNoiseGenerator(seed, 0.8)),
 	continentalnessInterpolator(LinearInterpolator({
-		//{0.0, 0.0}, {0.5, 0.5}, {1.0, 0.0}
-		//{0.0, 1.0}, {0.15, 0.1}, {0.25, 0.15}, {1.0, 0.4}
-		{0.0, 0.0}, {0.25, 0.2}, {0.65, 0.33}, {0.85, 0.4}, {1.0, 1.0}
+	//{0.0, 0.0}, {0.5, 0.5}, {1.0, 0.0}
+	//{0.0, 1.0}, {0.15, 0.1}, {0.25, 0.15}, {1.0, 0.4}
+	{0.0, 0.0}, {0.25, 0.2}, {0.65, 0.33}, {0.85, 0.4}, {1.0, 1.0}
 		})),
 	erosionGenerator(PerlinNoiseGenerator(seed << 4, FastNoiseLite::NoiseType::NoiseType_OpenSimplex2, 0.5, 1, 0.5)),
 	erosionInterpolator(LinearInterpolator({
@@ -72,9 +73,9 @@ int* MinecraftNoiseGenerator::generateHeightMap(int x, int z)
 			double erosion = erosionGenerator.get(16 * x + localX, 16 * z + localZ);
 			double erosionFactor = erosionInterpolator.interpolate(erosion);
 
-			heightMap[CHUNK_WIDTH * localX + localZ] = seaBed + std::max(std::min(int((continentalnessFactor + erosionFactor)*maxHeight), CHUNK_HEIGHT), 0);
+			heightMap[CHUNK_WIDTH * localX + localZ] = Math::Clamp(seaBed + int((continentalnessFactor + erosionFactor) * maxHeight), 0, CHUNK_HEIGHT - 1);
 		}
 	}
-	
+
 	return heightMap;
 }

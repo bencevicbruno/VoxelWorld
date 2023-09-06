@@ -27,10 +27,10 @@ Matrix::Matrix()
 	data[3][3] = 0;
 }
 
-Matrix::Matrix(float f00, float f01, float f02, float f03, 
-				float f10, float f11, float f12, float f13, 
-				float f20, float f21, float f22, float f23, 
-				float f30, float f31, float f32, float f33)
+Matrix::Matrix(float f00, float f01, float f02, float f03,
+	float f10, float f11, float f12, float f13,
+	float f20, float f21, float f22, float f23,
+	float f30, float f31, float f32, float f33)
 {
 	data[0][0] = f00;
 	data[0][1] = f01;
@@ -110,11 +110,11 @@ Vector Matrix::operator*(const Vector& vector) const
 	  + this->data[0][1] * vector.y
 	  + this->data[0][2] * vector.z
 	  + this->data[0][3] * vector.w,
-	    this->data[1][0] * vector.x
+		this->data[1][0] * vector.x
 	  + this->data[1][1] * vector.y
 	  + this->data[1][2] * vector.z
 	  + this->data[1][3] * vector.w,
-	    this->data[2][0] * vector.x
+		this->data[2][0] * vector.x
 	  + this->data[2][1] * vector.y
 	  + this->data[2][2] * vector.z
 	  + this->data[2][3] * vector.w,
@@ -167,9 +167,9 @@ void Matrix::invert()
 Matrix Matrix::GetIdentity()
 {
 	return Matrix(1, 0, 0, 0,
-				  0, 1, 0, 0,
-				  0, 0, 1, 0,
-				  0, 0, 0, 1);
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1);
 }
 
 Matrix Matrix::GetTranslation(const Vector& vector)

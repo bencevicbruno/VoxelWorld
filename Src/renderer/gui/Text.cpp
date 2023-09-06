@@ -10,8 +10,8 @@
 
 const float Text::SCALE = 5.0f;
 
-Text::Text():
-	text(""), 
+Text::Text() :
+	text(""),
 	x(0),
 	y(0),
 	width(0),
@@ -19,7 +19,7 @@ Text::Text():
 	noOfDrawableChars(0)
 {}
 
-Text::Text(std::string text_, int x, int y):
+Text::Text(std::string text_, int x, int y) :
 	x(x),
 	y(y),
 	vertexArray(VertexArray::CreateForGUI()),
@@ -50,7 +50,7 @@ Text& Text::operator=(Text&& other) noexcept
 	y = std::exchange(other.y, 0);
 	width = std::exchange(other.width, 0);
 	height = std::exchange(other.height, 0),
-	noOfDrawableChars = std::exchange(other.noOfDrawableChars, 0);
+		noOfDrawableChars = std::exchange(other.noOfDrawableChars, 0);
 
 	return *this;
 }
@@ -80,7 +80,7 @@ void Text::render() const
 
 void Text::centerHorizontally()
 {
-	x = (int) (Window::WIDTH- SCALE * width) / 2;
+	x = (int)(Window::WIDTH - SCALE * width) / 2;
 }
 
 void Text::setY(int newY)
@@ -116,8 +116,8 @@ void Text::setupVertexBuffer()
 		noOfDrawableChars++;
 
 		const Glyph& glyph = FontManager::GetInstance().getGlpyh(letter);
-		const float width = (float) glyph.getWidth();
-		const float height = (float) glyph.getHeight();
+		const float width = (float)glyph.getWidth();
+		const float height = (float)glyph.getHeight();
 
 		vertices.insert(vertices.end(), { // top-left
 			offset + 0.0f, 16.0f - height, 0.0f, glyph.getMinU(), glyph.getMaxV() });
@@ -132,7 +132,7 @@ void Text::setupVertexBuffer()
 		this->height = std::max(this->height, (unsigned int)height);
 	}
 
-	width = (int) (offset - 1.0f);
+	width = (int)(offset - 1.0f);
 
 	vertexBuffer = Buffer::CreateVertex(vertices);
 	vertexBuffer.bind();
@@ -141,11 +141,11 @@ void Text::setupVertexBuffer()
 void Text::setupIndexBuffer()
 {
 	std::vector<unsigned int> indices;
-	
+
 	for (unsigned int i = 0; i < noOfDrawableChars; i++)
 	{
 		indices.insert(indices.end(), {
-			4 * i + 2, 4 * i + 3, 4 * i + 1, 
+			4 * i + 2, 4 * i + 3, 4 * i + 1,
 			4 * i + 2, 4 * i + 1, 4 * i + 0
 			});
 	}

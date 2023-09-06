@@ -6,7 +6,7 @@ template<typename T>
 class AtomicSet
 {
 public:
-	
+
 	void insert(const T& t)
 	{
 		std::lock_guard<std::mutex> guard(accessMutex);
@@ -26,7 +26,7 @@ public:
 	void insert(const std::set<T>& elements)
 	{
 		std::lock_guard<std::mutex> guard(accessMutex);
-		
+
 		for (const T& t : elements)
 		{
 			set.insert(t);
@@ -45,7 +45,7 @@ public:
 
 		return lastElement;
 	}
-	
+
 	template <typename = std::enable_if_t<std::is_pointer_v<T>>>
 	T pop()
 	{

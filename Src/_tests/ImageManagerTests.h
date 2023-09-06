@@ -5,7 +5,6 @@
 #include "utils/image/ImageManagerException.h"
 
 namespace {
-
 	void basicImageSaveLoad()
 	{
 		startTest("Basic loading/saving");
@@ -23,7 +22,7 @@ namespace {
 
 			passTest();
 		}
-		catch(std::exception e)
+		catch (std::exception e)
 		{
 			failTest(e.what());
 		}

@@ -25,4 +25,3 @@ private:
 	void operator=(const FontManager& other) = delete;
 	void operator=(FontManager&& other) = delete;
 };
-

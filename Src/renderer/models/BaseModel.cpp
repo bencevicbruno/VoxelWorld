@@ -6,7 +6,7 @@ BaseModel::BaseModel() :
 	vertexArray(VertexArray::CreateForNone())
 {}
 
-BaseModel::BaseModel(VertexArray&& vertexArray):
+BaseModel::BaseModel(VertexArray&& vertexArray) :
 	vertexArray(std::move(vertexArray))
 {}
 
@@ -22,7 +22,7 @@ BaseModel& BaseModel::operator=(BaseModel&& other) noexcept
 	vertexArray = std::move(other.vertexArray);
 	vertexBuffer = std::move(other.vertexBuffer);
 	indexBuffer = std::move(other.indexBuffer);
-	
+
 	return *this;
 }
 
@@ -34,4 +34,3 @@ void BaseModel::render() const
 
 	glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, 0);
 }
-

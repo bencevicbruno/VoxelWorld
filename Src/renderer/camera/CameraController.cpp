@@ -82,7 +82,7 @@ void CameraController::update()
 
 void CameraController::onMouseScroll(float offset)
 {
-	dFOV = -offset*scrollSensitivity;
+	dFOV = -offset * scrollSensitivity;
 }
 
 void CameraController::onCursorMove(int deltaX, int deltaY)

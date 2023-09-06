@@ -9,7 +9,6 @@ BlockRegistry& BlockRegistry::GetInstance()
 
 BlockRegistry::BlockRegistry()
 {
-
 }
 
 void BlockRegistry::registerBlock(unsigned char id, BlockMesh&& mesh, BlockOpacity opacity)

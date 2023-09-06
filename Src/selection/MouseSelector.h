@@ -32,4 +32,3 @@ private:
 	void onLeftClick();
 	void onRightClick();
 };
-

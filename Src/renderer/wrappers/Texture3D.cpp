@@ -6,7 +6,7 @@
 #include "utils/image/Image.h"
 #include "utils/image/ImageManager.h"
 
-Texture3D::Texture3D():
+Texture3D::Texture3D() :
 	ID(0)
 {}
 

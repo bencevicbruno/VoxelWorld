@@ -93,7 +93,7 @@ Matrix Window::getOrthogonalMatrix() const
 	return matrix;
 }
 
-Window::Window(std::string title):
+Window::Window(std::string title) :
 	title(title), running(true),
 	width(WIDTH), height(HEIGHT),
 	isCursorGrabbed(false)

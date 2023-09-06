@@ -80,9 +80,9 @@ void Mouse::unsubscribeFromMouseScroll(IMouseScrollListener* listener)
 	), listeners.end());
 }
 
-Mouse::Mouse():
-	leftButtonDown(false), 
-	middleButtonDown(false), 
+Mouse::Mouse() :
+	leftButtonDown(false),
+	middleButtonDown(false),
 	rightButtonDown(false)
 {
 }

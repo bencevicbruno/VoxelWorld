@@ -47,7 +47,7 @@ void Shader::detachFromProgram(unsigned int programID) const
 	glDetachShader(programID, ID);
 }
 
-Shader::Shader(GLenum type, const std::string& name):
+Shader::Shader(GLenum type, const std::string& name) :
 	ID(glCreateShader(type)),
 	name(name)
 {
@@ -59,7 +59,7 @@ void Shader::compile() const
 {
 	const std::string source = FileIO::LoadLines("shaders/" + name);
 	const char* pSource = source.c_str();
-	
+
 	glShaderSource(ID, 1, &pSource, NULL);
 	glCompileShader(ID);
 }
@@ -79,7 +79,7 @@ void Shader::verifyCompilation() const
 
 	std::stringstream log;
 	log << "[" << name << "] Compilation failed: " << infoLog << std::endl;
-	
+
 	delete[] infoLog;
 
 	throw ShaderProgramRegistryException::ShaderCompilationFailed(this->name, log.str());

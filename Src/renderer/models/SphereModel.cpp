@@ -5,7 +5,7 @@
 #include "math/Vector.h"
 #include "math/Math.h"
 
-SphereModel::SphereModel():
+SphereModel::SphereModel() :
 	BaseModel(),
 	radius(0.0f),
 	stepCount(0),
@@ -140,7 +140,6 @@ void SphereModel::setupIndexBuffer()
 	indexBuffer = Buffer::CreateIndex(indices);
 	indexBuffer.bind();
 }
-
 
 unsigned int SphereModel::getVerticalStepCount() const
 {

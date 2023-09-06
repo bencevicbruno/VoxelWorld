@@ -39,16 +39,16 @@ Texture Texture::CreateFromImage(const Image& image)
 	texture.height = image.height;
 
 	texture.setWrapAndFilter();
-	
-	glTexImage2D(GL_TEXTURE_2D, 0, image.isRGBA ? GL_RGBA8 : GL_RGB8, 
+
+	glTexImage2D(GL_TEXTURE_2D, 0, image.isRGBA ? GL_RGBA8 : GL_RGB8,
 		image.width, image.height, 0, image.isRGBA ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, image.data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	return texture;
 }
 
-Texture::Texture():
-	width(0), 
+Texture::Texture() :
+	width(0),
 	height(0)
 {
 	glGenTextures(1, &ID);

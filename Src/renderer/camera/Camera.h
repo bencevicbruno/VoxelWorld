@@ -55,4 +55,3 @@ private:
 	void operator=(const Camera& other) = delete;
 	void operator=(Camera&& other) = delete;
 };
-

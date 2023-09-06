@@ -52,7 +52,7 @@ bool Chunk::isVisible(const Camera& camera) const
 	//return true;
 	Matrix chunkTranslationMatrix = Matrix::GetTranslation(position * 16);
 	Matrix chunkMatrix = camera.getProjectionMatrix() * camera.getViewMatrix() * chunkTranslationMatrix;
-	
+
 	int horizontalCoordinates[] = { 0, CHUNK_WIDTH };
 	constexpr float threshold = 1.1;
 

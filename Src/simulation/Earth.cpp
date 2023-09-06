@@ -3,7 +3,7 @@
 #include "renderer/camera/Camera.h"
 #include "renderer/shader/ShaderProgramRegistry.h"
 
-Earth::Earth():
+Earth::Earth() :
 	Planet("earth", 1.0f, 100.f, 0.5f, 0.01f, 30.0f),
 	nightTexture(Texture::CreateFromImage("planet/earth_night.png")),
 	cloudsTexture(Texture::CreateFromImage("planet/earth_clouds.png")),

@@ -16,7 +16,7 @@ BlockModel::BlockModel(const std::string& texture) :
 
 	vertexArray.setupAttributeData();
 
-    this->texture.setWrapAndFilterForGUI();
+	this->texture.setWrapAndFilterForGUI();
 }
 
 void BlockModel::setupVertexBuffer()
@@ -25,41 +25,41 @@ void BlockModel::setupVertexBuffer()
 
 	std::vector<float> vertices =
 	{
-        // BOTTOM
-         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   1.0f, -1.0f, 1.0f,     0.4f, 0.4f, 0.4f, 1.0f,
-          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   1.0f, -1.0f, 1.0f,     0.4f, 0.4f, 0.4f, 1.0f,
-          0.5f, -0.5f,  0.5f,  1.0f, 1.0f,   1.0f, -1.0f, 1.0f,     0.4f, 0.4f, 0.4f, 1.0f,
-         -0.5f, -0.5f,  0.5f,  0.0f, 1.0f,   1.0f, -1.0f, 1.0f,     0.4f, 0.4f, 0.4f, 1.0f,
+		// BOTTOM
+		 -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   1.0f, -1.0f, 1.0f,     0.4f, 0.4f, 0.4f, 1.0f,
+		  0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   1.0f, -1.0f, 1.0f,     0.4f, 0.4f, 0.4f, 1.0f,
+		  0.5f, -0.5f,  0.5f,  1.0f, 1.0f,   1.0f, -1.0f, 1.0f,     0.4f, 0.4f, 0.4f, 1.0f,
+		 -0.5f, -0.5f,  0.5f,  0.0f, 1.0f,   1.0f, -1.0f, 1.0f,     0.4f, 0.4f, 0.4f, 1.0f,
 
-         // TOP
-         -0.5f, 0.5f, -0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f, 1.0f, 1.0f,
-          0.5f, 0.5f, -0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f, 1.0f, 1.0f,
-          0.5f, 0.5f,  0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f, 1.0f, 1.0f,
-         -0.5f, 0.5f,  0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f, 1.0f, 1.0f,
+		 // TOP
+		 -0.5f, 0.5f, -0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f, 1.0f, 1.0f,
+		  0.5f, 0.5f, -0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f, 1.0f, 1.0f,
+		  0.5f, 0.5f,  0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f, 1.0f, 1.0f,
+		 -0.5f, 0.5f,  0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     1.0f, 1.0f, 1.0f, 1.0f,
 
-         // NORTH FACE
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
+		 // NORTH FACE
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
 
-        // SOUTH FACE
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
+		// SOUTH FACE
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.6f, 0.6f, 0.6f, 1.0f,
 
-        // west face
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
-             
-        // east face
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
+		// west face
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
+
+		// east face
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,   1.0f, 1.0f, 1.0f,     0.8f, 0.8f, 0.8f, 1.0f,
 	};
 
 	vertexBuffer = Buffer::CreateVertex(vertices);
@@ -72,11 +72,11 @@ void BlockModel::setupIndexBuffer()
 
 	indices.insert(indices.end(), {
 		0, 1, 2, 0, 2, 3, // bottom
-        4 * 1 + 0, 4 * 1 + 2, 4 * 1 + 1, 4 * 1 + 0, 4 * 1 + 3, 4 * 1 + 2, // top
-        4 * 2 + 0, 4 * 2 + 2, 4 * 2 + 1, 4 * 2 + 0, 4 * 2 + 3, 4 * 2 + 2, // north
-        4 * 3 + 0, 4 * 3 + 1, 4 * 3 + 2, 4 * 3 + 0, 4 * 3 + 2, 4 * 3 + 3, // south
-        4 * 4 + 0, 4 * 4 + 1, 4 * 4 + 2, 4 * 4 + 0, 4 * 4 + 2, 4 * 4 + 3, // west
-        4 * 5 + 0, 4 * 5 + 2, 4 * 5 + 1, 4 * 5 + 0, 4 * 5 + 3, 4 * 5 + 2 // east
+		4 * 1 + 0, 4 * 1 + 2, 4 * 1 + 1, 4 * 1 + 0, 4 * 1 + 3, 4 * 1 + 2, // top
+		4 * 2 + 0, 4 * 2 + 2, 4 * 2 + 1, 4 * 2 + 0, 4 * 2 + 3, 4 * 2 + 2, // north
+		4 * 3 + 0, 4 * 3 + 1, 4 * 3 + 2, 4 * 3 + 0, 4 * 3 + 2, 4 * 3 + 3, // south
+		4 * 4 + 0, 4 * 4 + 1, 4 * 4 + 2, 4 * 4 + 0, 4 * 4 + 2, 4 * 4 + 3, // west
+		4 * 5 + 0, 4 * 5 + 2, 4 * 5 + 1, 4 * 5 + 0, 4 * 5 + 3, 4 * 5 + 2 // east
 		});
 
 	indexBuffer = Buffer::CreateIndex(indices);
@@ -94,10 +94,10 @@ void BlockModel::render(double x, double y, double z) const
 	shaderProgram.setMatrix("model", Matrix::GetTranslation(x, y, z));
 
 	texture.bindToUnit(0);
-	
-    vertexArray.bind();
-    vertexBuffer.bind();
-    indexBuffer.bind();
-    //glDrawArrays(GL_TRIANGLES, 0, 36);
-    glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, 0);
+
+	vertexArray.bind();
+	vertexBuffer.bind();
+	indexBuffer.bind();
+	//glDrawArrays(GL_TRIANGLES, 0, 36);
+	glDrawElements(GL_TRIANGLES, indexBuffer.getCount(), GL_UNSIGNED_INT, 0);
 }

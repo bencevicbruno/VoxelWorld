@@ -56,8 +56,7 @@ int main()
 	std::time_t time = std::chrono::system_clock::to_time_t(now);
 	unsigned int currentTime = static_cast<unsigned int>(time);
 
-	World world(currentTime, 8);
-
+	World world(1, 8);
 
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -97,7 +96,7 @@ void initBlockRegistry()
 	registry.registerBlock(BLOCK_GRASS, BlockMesh(UVPosition::FromAtlas(3, 0), UVPosition::FromAtlas(1, 0), UVPosition::FromAtlas(2, 0)), BlockOpacity::OPAQUE);
 	registry.registerBlock(BLOCK_SAND, BlockMesh(UVPosition::FromAtlas(6, 0)), BlockOpacity::OPAQUE);
 	registry.registerBlock(BLOCK_WATER, BlockMesh(UVPosition::FromAtlas(4, 0)), BlockOpacity::TRANSPARENT);
-	registry.registerBlock(BLOCK_WATER_SURFACE, BlockMesh(UVPosition::FromAtlas(4, 0), Box(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f - 2.0f/16.0f, 0.5f)), BlockOpacity::TRANSPARENT);
+	registry.registerBlock(BLOCK_WATER_SURFACE, BlockMesh(UVPosition::FromAtlas(4, 0), Box(-0.5f, -0.5f, -0.5f, 0.5f, 0.5f - 2.0f / 16.0f, 0.5f)), BlockOpacity::TRANSPARENT);
 	registry.registerBlock(BLOCK_SNOW, BlockMesh(UVPosition::FromAtlas(5, 0)), BlockOpacity::OPAQUE);
 	registry.registerBlock(BLOCK_OAK_LOG, BlockMesh(UVPosition::FromAtlas(8, 0), UVPosition::FromAtlas(7, 0)), BlockOpacity::OPAQUE);
 	registry.registerBlock(BLOCK_OAK_LEAVES, BlockMesh(UVPosition::FromAtlas(9, 0)), BlockOpacity::SEE_THROUGH);
@@ -109,4 +108,13 @@ void initBlockRegistry()
 
 	registry.registerBlock(BLOCK_SEDGE, BlockMesh(UVPosition::FromAtlas(0, 2)), BlockOpacity::SEE_THROUGH);
 	registry.registerBlock(BLOCK_SEDGE_TOP, BlockMesh(UVPosition::FromAtlas(0, 1)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_LILY_PAD, BlockMesh(UVPosition::FromAtlas(2, 1), Box(-0.5, 0.5, 1.0 / 256.0)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_LILY_PADS, BlockMesh(UVPosition::FromAtlas(3, 1), Box(-0.5, 0.5, 1.0 / 256.0)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_HUGE_GRASS, BlockMesh(UVPosition::FromAtlas(1, 2)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_HUGE_GRASS_TOP, BlockMesh(UVPosition::FromAtlas(1, 1)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_MUSHROOM_BROWN, BlockMesh(UVPosition::FromAtlas(4, 1)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_MUSHROOM_RED, BlockMesh(UVPosition::FromAtlas(5, 1)), BlockOpacity::SEE_THROUGH);
+	registry.registerBlock(BLOCK_DEAD_LEAVES, BlockMesh(UVPosition::FromAtlas(6, 1), Box(-0.5, 0.5, 1.0 / 256.0)), BlockOpacity::SEE_THROUGH);
+
+	registry.registerBlock(BLOCK_SPEACIAL_FLOWER, BlockMesh(UVPosition::FromAtlas(7, 1)), BlockOpacity::SEE_THROUGH);
 }

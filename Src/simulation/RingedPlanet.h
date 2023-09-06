@@ -7,7 +7,7 @@ class RingedPlanet : public Planet
 {
 public:
 	RingedPlanet();
-	RingedPlanet(std::string name, float radius, float mass, float rotationSpeed, 
+	RingedPlanet(std::string name, float radius, float mass, float rotationSpeed,
 		float revolutionSpeed, float distanceFromSun, float innerRingRadius, float outerRingRadius);
 	RingedPlanet(RingedPlanet&& other) noexcept;
 	RingedPlanet& operator=(RingedPlanet&& other) noexcept;
@@ -24,4 +24,3 @@ private:
 	RingedPlanet(const RingedPlanet& other) = delete;
 	void operator=(const RingedPlanet& other) = delete;
 };
-

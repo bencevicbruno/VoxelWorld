@@ -10,7 +10,7 @@ public:
 	DiscModel(DiscModel&& other) noexcept;
 
 	DiscModel& operator=(DiscModel&& other) noexcept;
-	
+
 	float getInnerRadius() const;
 	float getOuterRadius() const;
 	unsigned int getStepCount() const;
@@ -26,4 +26,3 @@ private:
 	DiscModel(const DiscModel& other) = delete;
 	void operator=(const DiscModel& other) = delete;
 };
-

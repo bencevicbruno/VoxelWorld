@@ -5,7 +5,7 @@
 
 #include "renderer/shader/ShaderProgramRegistry.h"
 
-SpeedButton::SpeedButton():
+SpeedButton::SpeedButton() :
 	x(0), y(0),
 	speedFactor(0.0f),
 	selected(false)
@@ -116,11 +116,11 @@ float SpeedButton::getSimulationSpeedFactor()
 
 void SpeedButton::setupVertexBuffer()
 {
-	std::vector<float> vertices = { 
+	std::vector<float> vertices = {
 		0.0f, 0.0f, 0.0f,	0.0f, 1.0f, // top left
-	    1.0f, 0.0f, 0.0f,	1.0f, 1.0f, // top right
-	    0.0f, 1.0f, 0.0f,	0.0f, 0.0f, // bottom left
-	    1.0f, 1.0f, 0.0f,	1.0f, 0.0f }; // bottom right
+		1.0f, 0.0f, 0.0f,	1.0f, 1.0f, // top right
+		0.0f, 1.0f, 0.0f,	0.0f, 0.0f, // bottom left
+		1.0f, 1.0f, 0.0f,	1.0f, 0.0f }; // bottom right
 
 	vertexBuffer = Buffer::CreateVertex(vertices);
 	vertexBuffer.bind();

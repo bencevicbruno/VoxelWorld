@@ -6,7 +6,7 @@
 
 class Camera;
 
-class CameraController: IMouseScrollListener, ICursorMovementListener
+class CameraController : IMouseScrollListener, ICursorMovementListener
 {
 public:
 	CameraController();
@@ -29,4 +29,3 @@ private:
 	CameraController(const CameraController& other) = delete;
 	void operator=(const CameraController& other) = delete;
 };
-

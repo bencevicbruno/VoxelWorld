@@ -29,4 +29,3 @@ std::string FileIO::LoadLines(const std::string& fileLocation)
 
 	return stream.str();
 }
-

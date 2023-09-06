@@ -28,7 +28,7 @@ const std::vector<Asteroid*>& SolarSystem::getAsteroids() const
 void SolarSystem::update()
 {
 	float deltaTime = (std::chrono::system_clock::now() - lastTime).count() * SpeedButton::getSimulationSpeedFactor();
-	
+
 	processKeyboard();
 
 	for (auto& planet : planets)
@@ -58,7 +58,7 @@ void SolarSystem::render() const
 {
 	glEnable(GL_DEPTH_TEST);
 	sun.render();
-	
+
 	for (const auto& planet : planets)
 		planet->render();
 

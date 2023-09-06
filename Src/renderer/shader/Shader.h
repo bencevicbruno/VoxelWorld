@@ -31,5 +31,3 @@ private:
 	Shader(const Shader& other) = delete;
 	void operator=(const Shader& other) = delete;
 };
-
-

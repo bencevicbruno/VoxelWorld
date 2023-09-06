@@ -3,7 +3,7 @@
 #include "math/PerlinNoiseGenerator.h"
 #include "world/terrain/TerrainGenerator.h"
 
-class BiomeNoiseTerrainGenerator: public TerrainGenerator
+class BiomeNoiseTerrainGenerator : public TerrainGenerator
 {
 public:
 	BiomeNoiseTerrainGenerator(unsigned int seed);

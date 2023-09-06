@@ -11,13 +11,13 @@ GUI::GUI(const MouseSelector& mouseSelector) :
 	const int WIDTH = Window::WIDTH;
 	const int HEIGHT = Window::HEIGHT - SpeedButton::SIZE;
 
-	std::string names[] = {"pause", "speed_1x", "speed_2x", "speed_3x"};
+	std::string names[] = { "pause", "speed_1x", "speed_2x", "speed_3x" };
 	float speeds[] = { 0.0f, 10e-6f, 10e-5f, 10e-4f };
 	int xPos[] = { 4, 3, 2, 1 };
 
 	for (int i = 0; i < 4; i++)
 	{
-		speedButtons[i] = std::move(SpeedButton(names[i], 
+		speedButtons[i] = std::move(SpeedButton(names[i],
 			speeds[i], WIDTH - xPos[i] * SpeedButton::SIZE, HEIGHT));
 	}
 }

@@ -43,4 +43,3 @@ ShaderProgram& ShaderProgramRegistry::getShaderProgram(const std::string& vertex
 		throw ShaderProgramRegistryException::ShaderProgramNotLoaded(vertexShaderName, fragmentShaderName);
 	}
 }
-

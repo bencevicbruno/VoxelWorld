@@ -4,7 +4,7 @@
 #include "renderer/gui/Text.h"
 #include "selection/MouseSelector.h"
 
-class GUI: public IMouseClickListener
+class GUI : public IMouseClickListener
 {
 public:
 	GUI(const MouseSelector& mouseSelector);
@@ -24,4 +24,3 @@ private:
 	void operator=(const GUI& other) = delete;
 	void operator=(GUI&& other) = delete;
 };
-

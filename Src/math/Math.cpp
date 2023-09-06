@@ -12,12 +12,12 @@ float Math::CreateRandom(float min, float max)
 
 float Math::ToRadians(float degrees)
 {
-	return degrees * (float) M_PI / 180.0f;
+	return degrees * (float)M_PI / 180.0f;
 }
 
 float Math::ToDegrees(float radians)
 {
-	return radians / (float) M_PI * 180.0f;
+	return radians / (float)M_PI * 180.0f;
 }
 
 float Math::Clamp(float value, float min, float max)

@@ -11,7 +11,7 @@ Skybox::Skybox(const Color& color) :
 	texture(Texture3D(color))
 {}
 
-Skybox::Skybox(const std::string& name):
+Skybox::Skybox(const std::string& name) :
 	model(SkyboxModel(1.0f)),
 	texture(Texture3D("skybox/" + name))
 {}

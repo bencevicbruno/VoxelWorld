@@ -51,10 +51,10 @@ Image Image::CreateFromColor(const Color& color)
 {
 	Image image(1);
 
-	image.data[0] = (unsigned char) (color.r * 225.0f);
-	image.data[1] = (unsigned char) (color.g * 225.0f);
-	image.data[2] = (unsigned char) (color.b * 225.0f);
-	image.data[3] = (unsigned char) (color.a * 225.0f);
+	image.data[0] = (unsigned char)(color.r * 225.0f);
+	image.data[1] = (unsigned char)(color.g * 225.0f);
+	image.data[2] = (unsigned char)(color.b * 225.0f);
+	image.data[3] = (unsigned char)(color.a * 225.0f);
 
 	return image;
 }
@@ -62,8 +62,8 @@ Image Image::CreateFromColor(const Color& color)
 Image Image::CreateFromPerlinNoise(int size, int seed)
 {
 	return Image::CreateFromPerlinNoise(size, seed, [](double value) -> unsigned char {
-		return (unsigned char) (value * 255);
-	});
+		return (unsigned char)(value * 255);
+		});
 }
 
 Image Image::CreateFromPerlinNoise(int size, int seed, unsigned char (*lambda)(double))
@@ -74,8 +74,8 @@ Image Image::CreateFromPerlinNoise(int size, int seed, unsigned char (*lambda)(d
 	for (int i = 0; i < size; i++)
 	{
 		for (int j = 0; j < size; j++)
-		{			
-			unsigned char value = lambda(noiseGenerator.get((float) j / (float) size * 2 , (float)i / (float) size * 2));
+		{
+			unsigned char value = lambda(noiseGenerator.get((float)j / (float)size * 2, (float)i / (float)size * 2));
 			image.data[4 * (size * i + j) + 0] = value;
 			image.data[4 * (size * i + j) + 1] = value;
 			image.data[4 * (size * i + j) + 2] = value;
@@ -85,4 +85,3 @@ Image Image::CreateFromPerlinNoise(int size, int seed, unsigned char (*lambda)(d
 
 	return image;
 }
-

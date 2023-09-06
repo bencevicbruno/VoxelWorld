@@ -26,7 +26,7 @@ VertexArray& VertexArray::operator=(VertexArray&& other) noexcept
 	glDeleteVertexArrays(1, &ID);
 	ID = std::exchange(other.ID, 0);
 	type = std::exchange(other.type, Type::NONE);
-	
+
 	return *this;
 }
 
@@ -47,7 +47,7 @@ void VertexArray::setupAttributeData() const
 		// Position -> 3
 		// UVs -> 2
 		const unsigned int stride = (3 + 2) * sizeof(float);
-		
+
 		this->bind();
 
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)(0 * sizeof(float)));

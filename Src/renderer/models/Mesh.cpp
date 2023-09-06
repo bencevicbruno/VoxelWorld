@@ -22,7 +22,7 @@ Mesh& Mesh::operator=(Mesh&& other) noexcept
 	vertexArray = std::move(other.vertexArray);
 	vertexBuffer = std::move(other.vertexBuffer);
 	indexBuffer = std::move(other.indexBuffer);
-
+	
 	return *this;
 }
 
@@ -30,7 +30,7 @@ void Mesh::addMesh(const Mesh& otherMesh)
 {
 	const unsigned int verticesCount = vertices.size();
 
-	vertices.insert(vertices.end(), otherMesh.vertices.begin(), otherMesh.vertices.end());
+ 	vertices.insert(vertices.end(), otherMesh.vertices.begin(), otherMesh.vertices.end());
 
 	for (unsigned int index : otherMesh.indices)
 	{
@@ -43,7 +43,7 @@ void Mesh::generateBuffers()
 	vertexArray = VertexArray::CreateForWorld();
 	vertexArray.bind();
 
-	vertexBuffer = Buffer::CreateVertex((float*) vertices.data(), vertices.size() * MeshVertex::SIZE);
+	vertexBuffer = Buffer::CreateVertex((float*)vertices.data(), vertices.size() * MeshVertex::SIZE);
 	vertexBuffer.bind();
 
 	indexBuffer = Buffer::CreateIndex(indices);

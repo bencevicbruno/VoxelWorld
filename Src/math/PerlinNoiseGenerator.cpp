@@ -58,7 +58,7 @@ double PerlinNoiseGenerator::get(double x, double y) const
 
 double PerlinNoiseGenerator::get(int x, int y) const
 {
-	return get(constantX * x, constantY * y);
+	return get((double) x, (double)y);
 }
 
 double PerlinNoiseGenerator::get(double x, double y, double z) const
@@ -68,5 +68,5 @@ double PerlinNoiseGenerator::get(double x, double y, double z) const
 
 double PerlinNoiseGenerator::get(int x, int y, int z) const
 {
-	return get(constantX * x, constantY * y, constantZ * z);
+	return get((double)x, (double)y, (double)z);
 }

@@ -5,7 +5,6 @@
 #include "utils/file/FileManagerException.h"
 
 namespace {
-
 	void performTest1()
 	{
 		startTest("Writing a text file");

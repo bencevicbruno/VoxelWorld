@@ -26,4 +26,3 @@ protected:
 	BaseModel(const BaseModel& other) = delete;
 	void operator=(const BaseModel& other) = delete;
 };
-

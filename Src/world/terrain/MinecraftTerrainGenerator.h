@@ -12,7 +12,6 @@ public:
 
 	virtual unsigned char* generateTerrain(unsigned int seed, const Vector& position, const int* heightMap) const;
 
-	
 	virtual int* generateHeightMap(int x, int z);
 private:
 	int seaBed;

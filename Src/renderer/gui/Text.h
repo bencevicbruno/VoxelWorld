@@ -15,7 +15,7 @@ public:
 	Text& operator=(Text&& other) noexcept;
 
 	void render() const;
-	
+
 	void centerHorizontally();
 	void setY(int newY);
 
@@ -39,4 +39,3 @@ private:
 	Text(const Text& other) = delete;
 	void operator=(const Text& other) = delete;
 };
-

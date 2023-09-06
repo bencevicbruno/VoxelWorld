@@ -35,7 +35,6 @@ unsigned char* BiomeNoiseTerrainGenerator::generateTerrain(unsigned int seed, co
 			{
 				blocks[coordinates] = BLOCK_GRASS;
 			}
-
 		}
 	}
 
@@ -51,6 +50,5 @@ void BiomeNoiseTerrainGenerator::spawnTree(int x, int z)
 {
 	for (int y = 1; y <= 5; y++)
 	{
-		
 	}
 }

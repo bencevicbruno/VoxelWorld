@@ -7,9 +7,9 @@ Vector::Vector() :
 {}
 
 Vector::Vector(float constant) :
-	x(constant), 
-	y(constant), 
-	z(constant), 
+	x(constant),
+	y(constant),
+	z(constant),
 	w(constant)
 {}
 
@@ -28,9 +28,9 @@ Vector::Vector(float x, float y, float z) :
 {}
 
 Vector::Vector(float x, float y, float z, float w) :
-	x(x), 
-	y(y), 
-	z(z), 
+	x(x),
+	y(y),
+	z(z),
 	w(w)
 {}
 
@@ -239,21 +239,15 @@ Vector Vector::GlobalToChunk(const Vector& globalPosition)
 	bool isXNegative = globalPosition.x < 0;
 	bool isZNegative = globalPosition.z < 0;
 
-	int chunkX = isXNegative ? -(int(abs(globalPosition.x - 15)) / 16) : (int(globalPosition.x) / 16);
-	int chunkZ = isZNegative ? -(int(abs(globalPosition.z - 15)) / 16) : (int(globalPosition.z) / 16);
+	int chunkX = isXNegative ? (ceil(int(globalPosition.x + 1) / 16) - 1) : (int(globalPosition.x) / 16);
+	int chunkZ = isZNegative ? (ceil(int(globalPosition.z + 1) / 16) - 1) : (int(globalPosition.z) / 16);
 
-	return Vector(chunkX, 0, chunkZ);
+	return Vector(chunkX, 0.0, chunkZ);
 }
 
 Vector Vector::GlobalToLocal(const Vector& globalPosition)
 {
-	bool isXNegative = globalPosition.x < 0;
-	bool isZNegative = globalPosition.z < 0;
-
-	int localX = isXNegative ? (15 - (abs(int(globalPosition.x)) - 1) % 16) : (int(globalPosition.x) % 16);
-	int localZ = isZNegative ? (15 - (abs(int(globalPosition.z)) - 1) % 16) : (int(globalPosition.z) % 16);
-
-	return { localX, int(globalPosition.y), localZ };
+	return { (int(globalPosition.x) % 16 + 16) % 16, int(globalPosition.y), (int(globalPosition.z) % 16 + 16) % 16 };
 }
 
 std::ostream& operator<<(std::ostream& outputStream, const Vector& vector)

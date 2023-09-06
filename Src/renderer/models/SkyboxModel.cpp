@@ -3,7 +3,7 @@
 #include <GLEW/glew.h>
 #include <GLFW/glfw3.h>
 
-SkyboxModel::SkyboxModel():
+SkyboxModel::SkyboxModel() :
 	BaseModel(),
 	size(0),
 	bottomColor(Color::CreateFromRGB(0, 0, 0)),

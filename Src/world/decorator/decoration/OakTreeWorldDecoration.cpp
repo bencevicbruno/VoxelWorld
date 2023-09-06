@@ -36,7 +36,7 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> OakTreeWor
 		}
 	}
 
-	addBlock(blocks, { startPosition.x, startPosition.y + 7, startPosition.z}, BLOCK_OAK_LEAVES);
+	addBlock(blocks, { startPosition.x, startPosition.y + 7, startPosition.z }, BLOCK_OAK_LEAVES);
 	//Debug::printBlocksInChunks(blocks);
 	return blocks;
 }

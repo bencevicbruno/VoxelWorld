@@ -48,4 +48,3 @@ private:
 	void operator=(const Window& other) = delete;
 	void operator=(Window&& other) = delete;
 };
-

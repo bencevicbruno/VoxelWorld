@@ -30,7 +30,9 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> SurfaceBlo
 				for (int y = height - 4; y <= height; y++)
 				{
 					if (blocks[height * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] == BLOCK_AIR) continue;
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = y == height ? BLOCK_GRAVEL : BLOCK_STONE;
+
+					double coarsenessLevel = coarsenessGenerator.get(5 * (chunkPosition.x * 16 + x), 5 * (chunkPosition.z * 16 + z));
+					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = y == height ? (coarsenessLevel > 0.5 ? BLOCK_GRAVEL : BLOCK_SNOW) : BLOCK_STONE;
 				}
 			}
 			else
@@ -39,7 +41,7 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> SurfaceBlo
 				double vegetationLevel = vegetationGenerator.get(chunkPosition.x * 16 + x, chunkPosition.z * 16 + z);
 				double coarsenessLevel = coarsenessGenerator.get(chunkPosition.x * 16 + x, chunkPosition.z * 16 + z);
 
-				if (vegetationLevel < 0.3)
+				if (vegetationLevel < 0.15)
 				{
 					if (coarsenessLevel < 0.7)
 					{
@@ -52,7 +54,7 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> SurfaceBlo
 				}
 				else
 				{
-					if (coarsenessLevel < 0.7)
+					if (coarsenessLevel < 0.8)
 					{
 						surfaceBlock = BLOCK_GRASS;
 					}

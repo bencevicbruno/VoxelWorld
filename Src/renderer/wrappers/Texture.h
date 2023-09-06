@@ -29,7 +29,3 @@ private:
 	Texture(const Texture& other) = delete;
 	void operator=(const Texture& other) = delete;
 };
-
-
-
-

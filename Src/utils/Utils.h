@@ -6,4 +6,3 @@ namespace Utils
 {
 	void CrashWithLog(std::string message);
 }
-
