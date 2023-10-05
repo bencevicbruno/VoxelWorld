@@ -26,4 +26,4 @@ void main()
     color = colorIn;
 
     gl_Position = projection_view * model * vec4(positionIn.x, positionIn.y + waveHeight, positionIn.z, 1.0);
-}
+} 

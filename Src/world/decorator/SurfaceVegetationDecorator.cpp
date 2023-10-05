@@ -6,7 +6,8 @@ SurfaceVegetationDecorator::SurfaceVegetationDecorator(int seed) :
 	seed(seed)
 {}
 
-std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> SurfaceVegetationDecorator::decorate(const Vector & chunkPosition, unsigned char* blocks, const int* heightMap) const
+std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>>
+	SurfaceVegetationDecorator::decorate(const Vector & chunkPosition, unsigned char* blocks, const int* heightMap) const
 {
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{

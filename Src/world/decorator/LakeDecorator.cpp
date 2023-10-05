@@ -6,7 +6,8 @@ LakeDecorator::LakeDecorator(int lakeLevel) :
 	lakeLevel(lakeLevel)
 {}
 
-std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> LakeDecorator::decorate(const Vector& chunkPosition, unsigned char* blocks, const int* heightMap) const
+std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>>
+	LakeDecorator::decorate(const Vector& chunkPosition, unsigned char* blocks, const int* heightMap) const
 {
 	for (int x = 0; x < CHUNK_WIDTH; x++)
 	{
@@ -14,7 +15,7 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> LakeDecora
 		{
 			for (int y = heightMap[x * CHUNK_WIDTH + z]; y <= lakeLevel; y++)
 			{
-				blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = y == lakeLevel ? BLOCK_WATER_SURFACE : BLOCK_WATER;
+				blocks[Chunk::coordsToOffset(x, y, z)] = y == lakeLevel ? BLOCK_WATER_SURFACE : BLOCK_WATER;
 			}
 		}
 	}

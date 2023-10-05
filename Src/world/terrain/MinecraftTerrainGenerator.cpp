@@ -5,8 +5,9 @@
 #include "math/Math.h"
 #include "utils/debug/Debug.h"
 #include "world/chunk/Chunk.h"
+#include "Options.h"
 
-MinecraftNoiseGenerator::MinecraftNoiseGenerator(unsigned int seed) :
+FinalTerrainGenerator::FinalTerrainGenerator(unsigned int seed) :
 	seaBed(16),
 	continentalnessGenerator(PerlinNoiseGenerator(seed, 0.8)),
 	continentalnessInterpolator(LinearInterpolator({
@@ -22,7 +23,7 @@ MinecraftNoiseGenerator::MinecraftNoiseGenerator(unsigned int seed) :
 	undergroundCaveNoiseGenerator(PerlinNoiseGenerator(seed * 10, FastNoiseLite::NoiseType::NoiseType_OpenSimplex2, 0.8))
 {}
 
-unsigned char* MinecraftNoiseGenerator::generateTerrain(unsigned int seed, const Vector& position, const int* heightMap) const
+unsigned char* FinalTerrainGenerator::generateTerrain(unsigned int seed, const Vector& position, const int* heightMap) const
 {
 	unsigned char* blocks = new unsigned char[CHUNK_WIDTH * CHUNK_WIDTH * CHUNK_HEIGHT];
 
@@ -46,11 +47,17 @@ unsigned char* MinecraftNoiseGenerator::generateTerrain(unsigned int seed, const
 				double undergroundCaveValue = undergroundCaveNoiseGenerator.get(globalX, globalY, globalZ);
 				bool isPartOfUndergroundCave = (undergroundCaveValue > 0.3) && (undergroundCaveValue < 0.45) && (globalY <= height - 10);
 
+
 				bool isBlock = globalY <= height
 					&& !isPartOfSurfaceCave
 					&& !isPartOfUndergroundCave;
 
-				blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = isBlock ? BLOCK_STONE : BLOCK_AIR;
+				if (!ENABLE_CAVES)
+				{
+					isBlock = globalY <= height;
+				}
+
+				blocks[Chunk::coordsToOffset(x, y, z)] = isBlock ? BLOCK_STONE : BLOCK_AIR;
 			}
 		}
 	}
@@ -58,7 +65,7 @@ unsigned char* MinecraftNoiseGenerator::generateTerrain(unsigned int seed, const
 	return blocks;
 }
 
-int* MinecraftNoiseGenerator::generateHeightMap(int x, int z)
+int* FinalTerrainGenerator::generateHeightMap(int x, int z)
 {
 	int maxHeight = CHUNK_HEIGHT - seaBed;
 	int* heightMap = new int[CHUNK_WIDTH * CHUNK_WIDTH];

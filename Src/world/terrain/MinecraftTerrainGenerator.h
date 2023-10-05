@@ -4,11 +4,11 @@
 #include "math/PerlinNoiseGenerator.h"
 #include "world/terrain/TerrainGenerator.h"
 
-class MinecraftNoiseGenerator : public TerrainGenerator
+class FinalTerrainGenerator : public TerrainGenerator
 {
 public:
-	MinecraftNoiseGenerator(unsigned int seed);
-	virtual ~MinecraftNoiseGenerator() = default;
+	FinalTerrainGenerator(unsigned int seed);
+	virtual ~FinalTerrainGenerator() = default;
 
 	virtual unsigned char* generateTerrain(unsigned int seed, const Vector& position, const int* heightMap) const;
 

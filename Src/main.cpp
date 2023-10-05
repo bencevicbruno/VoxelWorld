@@ -28,14 +28,16 @@ void initBlockRegistry();
 
 int main()
 {
+	//performPerlinNoiseTests();
+	//return 0;
+
 	std::thread::id threadID = std::this_thread::get_id();
 	std::cout << "Main threadID: " << threadID << std::endl;
 	initBlockRegistry();
-	/*
-	performFileManagerTests();
+	
+	//performFileManagerTests();
 	//performImageManagerTests();
-	performPerlinNoiseTests();
-	//return 0;*/
+	
 	std::srand((unsigned int)std::time(nullptr));
 	Window& window = Window::GetInstance();
 
@@ -51,37 +53,44 @@ int main()
 	ShaderProgramRegistry::GetInstance().loadShader("skybox");
 
 	Skybox skybox(Color::CreateFromRGB(173, 216, 230));
+	//Skybox skybox(Color::CreateFromRGB(255, 255, 255));
 
 	std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
 	std::time_t time = std::chrono::system_clock::to_time_t(now);
-	unsigned int currentTime = static_cast<unsigned int>(time);
+	unsigned int currentTime = static_cast<unsigned int>(time); //1 << 31;//static_cast<unsigned int>(time);
+	std::cout << "Seed: " << currentTime << std::endl;
 
-	World world(1, 8);
+	World world(currentTime, CHUNKS_COUNT_TO_GENERATE);
 
 	glEnable(GL_DEPTH_TEST);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	auto last_time = std::chrono::high_resolution_clock::now();
+
+	if (RENDER_MESH_FANS)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+
 	while (!window.shouldClose())
 	{
 		window.update();
 		camera.update();
 		world.update(camera.getPosition());
-		//solarSystem.update();
-		//mouseSelector.update();
 
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//solarSystem.render();
+		skybox.render();
 
 		last_time = std::chrono::high_resolution_clock::now();
-		skybox.render();
 		world.render();
-		auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::high_resolution_clock::now() - last_time);
-		window.setTitle("Vertex World " + std::to_string(duration.count()) + "ms");
+		//auto duration = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - last_time).count();
+		//std::cout << duration << std::endl;
+
+		//auto fps = duration == 0 ? "X fps" : (std::to_string(1000 / duration) + " fps");
+		//window.setTitle("Voxel World " + fps);
 	}
 
 	return 0;

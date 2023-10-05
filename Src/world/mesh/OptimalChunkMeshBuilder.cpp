@@ -55,7 +55,7 @@ void OptimalChunkMeshBuilder::generateMiddle(Chunk* chunk, ChunkMesh& chunkMesh)
 		{
 			for (int z = 0; z < CHUNK_WIDTH; z++)
 			{
-				unsigned char currentBlockID = chunk->blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z];
+				unsigned char currentBlockID = chunk->blocks[Chunk::coordsToOffset(x, y, z)];
 				if (currentBlockID == 0) continue;
 
 				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
@@ -182,7 +182,7 @@ void OptimalChunkMeshBuilder::generateNorth(Chunk* chunk, ChunkMesh& chunkMesh) 
 	{
 		for (int y = 0; y < CHUNK_HEIGHT; y++)
 		{
-			unsigned char currentBlockID = chunk->blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + 0];
+			unsigned char currentBlockID = chunk->blocks[Chunk::coordsToOffset(x, y, 0)];
 			if (currentBlockID == 0) continue;
 
 			Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
@@ -216,7 +216,7 @@ void OptimalChunkMeshBuilder::generateSouth(Chunk* chunk, ChunkMesh& chunkMesh) 
 	{
 		for (int y = 0; y < CHUNK_HEIGHT; y++)
 		{
-			unsigned char currentBlockID = chunk->blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + 15];
+			unsigned char currentBlockID = chunk->blocks[Chunk::coordsToOffset(x, y, 15)];
 			if (currentBlockID == 0) continue;
 
 			Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
@@ -251,7 +251,7 @@ void OptimalChunkMeshBuilder::generateWest(Chunk* chunk, ChunkMesh& chunkMesh) c
 	{
 		for (int y = 0; y < CHUNK_HEIGHT; y++)
 		{
-			unsigned char currentBlockID = chunk->blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + 0 * CHUNK_WIDTH + z];
+			unsigned char currentBlockID = chunk->blocks[Chunk::coordsToOffset(0, y, z)];
 			if (currentBlockID == 0) continue;
 
 			Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);
@@ -286,7 +286,7 @@ void OptimalChunkMeshBuilder::generateEast(Chunk* chunk, ChunkMesh& chunkMesh) c
 	{
 		for (int y = 0; y < CHUNK_HEIGHT; y++)
 		{
-			unsigned char currentBlockID = chunk->blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + 15 * CHUNK_WIDTH + z];
+			unsigned char currentBlockID = chunk->blocks[Chunk::coordsToOffset(15, y, z)];
 			if (currentBlockID == 0) continue;
 
 			Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);

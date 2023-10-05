@@ -91,6 +91,26 @@ void Chunk::updateChunkMesh(ChunkMesh* chunkMesh)
 	delete chunkMesh;
 }
 
+int Chunk::coordsToOffset(int x, int y, int z)
+{
+	if (x < 0 || x >= CHUNK_WIDTH || z < 0 || z >= CHUNK_WIDTH || y < 0 || y >= CHUNK_HEIGHT)
+	{
+		throw "Illegal coordinates";
+	}
+
+	return y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z;
+}
+
+int Chunk::coordsToOffset(float x, float y, float z)
+{
+	return coordsToOffset(int(x), int(y), int(z));
+}
+
+int Chunk::coordsToOffset(const Vector& coords)
+{
+	return coordsToOffset(coords.x, coords.y, coords.z);
+}
+
 void Chunk::render() const
 {
 	mesh.render();
@@ -143,13 +163,7 @@ void Chunk::setBlock(const Vector& position, const Block& block)
 
 void Chunk::setBlock(const Vector& position, unsigned char block)
 {
-	if (position.x < 0 || position.y < 0 || position.z < 0 || position.x >= CHUNK_WIDTH || position.y >= CHUNK_HEIGHT || position.z >= CHUNK_WIDTH)
-	{
-		std::cout << "Weird coordiantes incoming " << position << std::endl;
-		return;// throw "What the hell";
-	}
-
-	blocks[int(position.y) * CHUNK_WIDTH * CHUNK_WIDTH + int(position.x) * CHUNK_WIDTH + int(position.z)] = block;
+	blocks[coordsToOffset(position)] = block;
 	dirty = true;
 }
 

@@ -19,10 +19,10 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> SurfaceBlo
 
 			if (height <= lakeLevel + 2)
 			{
-				for (int y = height - 2; y <= height; y++)
+				for (int y = std::max(height - 2, 0); y <= height; y++)
 				{
-					if (blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] == BLOCK_AIR) continue;
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = BLOCK_SAND;
+					if (blocks[Chunk::coordsToOffset(x, y, z)] == BLOCK_AIR) continue;
+					blocks[Chunk::coordsToOffset(x, y, z)] = BLOCK_SAND;
 				}
 			}
 			else if (height > 100)
@@ -32,7 +32,7 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> SurfaceBlo
 					if (blocks[height * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] == BLOCK_AIR) continue;
 
 					double coarsenessLevel = coarsenessGenerator.get(5 * (chunkPosition.x * 16 + x), 5 * (chunkPosition.z * 16 + z));
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = y == height ? (coarsenessLevel > 0.5 ? BLOCK_GRAVEL : BLOCK_SNOW) : BLOCK_STONE;
+					blocks[Chunk::coordsToOffset(x, y, z)] = y == height ? (coarsenessLevel > 0.5 ? BLOCK_GRAVEL : BLOCK_SNOW) : BLOCK_STONE;
 				}
 			}
 			else
@@ -66,8 +66,8 @@ std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>> SurfaceBlo
 
 				for (int y = height - 4; y <= height; y++)
 				{
-					if (blocks[height * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] == BLOCK_AIR) continue;
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = y == height ? surfaceBlock : BLOCK_DIRT;
+					if (blocks[Chunk::coordsToOffset(x, height, z)] == BLOCK_AIR) continue;
+					blocks[Chunk::coordsToOffset(x, y, z)] = y == height ? surfaceBlock : BLOCK_DIRT;
 				}
 			}
 		}

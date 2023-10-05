@@ -8,6 +8,7 @@
 #include "renderer/camera/CameraController.h"
 
 #include "utils/Utils.h"
+#include "Options.h"
 
 const Camera& Camera::getActiveCamera()
 {
@@ -20,9 +21,9 @@ const Camera& Camera::getActiveCamera()
 }
 
 Camera::Camera() :
-	position({ 0, 64, 0, 0 }),
-	yaw(180), pitch(-45),
-	fov(90.0f), // BACK TO 80.0F
+	position(CAMERA_START_POSITION),
+	yaw(CAMERA_START_YAW), pitch(CAMERA_START_PITCH),
+	fov(CAMERA_START_POV),
 	controller(CameraController(this, 0.01f, 0.5f, 0.1f))
 {
 	update();
@@ -96,11 +97,10 @@ void Camera::update()
 {
 	controller.update();
 	updateViewVectors();
-	/*
-	std::cout << "Camera@" << position.x
-		<< "/" << position.y
-		<< "/" << position.z
-		<< std::endl;*/
+
+#if LOG_CAMERA 
+	std::cout << position << " " << yaw << " " << pitch << " " << fov << std::endl;
+#endif
 }
 
 Matrix Camera::getViewMatrix() const

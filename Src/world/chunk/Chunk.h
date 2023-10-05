@@ -45,6 +45,9 @@ public:
 	std::vector<Vector> getNeighbouringPositions() const;
 
 	void updateChunkMesh(ChunkMesh* chunkMesh);
+	static int coordsToOffset(int x, int y, int z);
+	static int coordsToOffset(float x, float y, float z);
+	static int coordsToOffset(const Vector& coords);
 private:
 	Vector position;
 	World* world;

@@ -11,7 +11,7 @@ uniform bool enablePhong;;
 
 out vec4 FragColor;
 
-const vec3 LIGHT_POSITION = vec3(100.0);
+const vec3 LIGHT_POSITION = vec3(10.0);
 
 vec4 getAmbientLight()
 {
@@ -45,9 +45,7 @@ vec4 getSpecularLight(vec3 norm, vec3 lightDirection)
 
 void main()
 {
-    if (enablePhong)
-    {
-        vec3 norm = normalize(normal);
+   vec3 norm = normalize(normal);
         vec3 lightDirection = normalize(LIGHT_POSITION - fragment_position);
 
         vec4 ambientLight = getAmbientLight();
@@ -58,14 +56,4 @@ void main()
         vec4 outputColor = light * texture(object_texture, uv) * color;
 
         FragColor = vec4(outputColor.x, outputColor.y, outputColor.z, 0.75);
-    }
-    else 
-    {
-        vec4 outputFragColor = texture(object_texture, uv) * color;
-
-        if (outputFragColor.a < 0.5)
-            discard;
-        FragColor = outputFragColor;
-    }
-    
 }

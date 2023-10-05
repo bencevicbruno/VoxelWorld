@@ -59,14 +59,18 @@ void World::addCleanChunks(const std::vector<std::tuple<Chunk*, ChunkMesh*>>& ch
 
 void World::update(const Vector& cameraPosition)
 {
+	// 1) Replace old meshes
 	updateCleanedChunkMeshes();
+	// 2) Replace pending blocks
 	handlePendingBlocks();
+	// 3) Add new chunks to the list
 	addPendingChunks();
+	// 4) Request new meshes
 	handleDirtyChunks();
 
 	time += 0.01;
 }
-
+ 
 void World::addPendingChunks()
 {
 	pendingChunks.perform([this](std::vector<std::tuple<Chunk*, ChunkMesh*>>& pendingChunks) -> void
@@ -175,31 +179,28 @@ void World::render()
 
 	shaderProgram.setFloat("waveAmplifier", 0);
 	shaderProgram.setBool("enablePhong", false);
-	for (auto& it : chunks)
+	for (auto& [position, chunk] : chunks)
 	{
-		//if (!it.second->isVisible(camera)) continue;
-		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first * 16));
-		it.second->render();
+		shaderProgram.setMatrix("model", Matrix::GetTranslation(position * 16));
+		chunk->render();
 	}
 
 	glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.5f);
-	for (auto& it : chunks)
+	for (auto& [position, chunk] : chunks)
 	{
-		//if (!it.second->isVisible(camera)) continue;
-		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first * 16));
-		it.second->renderTransparent();
+		shaderProgram.setMatrix("model", Matrix::GetTranslation(position * 16));
+		chunk->renderTransparent();
 	}
 	glDisable(GL_ALPHA_TEST);
-
+	
 	glDisable(GL_CULL_FACE);
-	shaderProgram.setFloat("waveAmplifier", 1.5 / 16.0);
+	shaderProgram.setFloat("waveAmplifier", 3 / 16.0);
 	shaderProgram.setBool("enablePhong", true);
-	for (auto& it : chunks)
+	for (auto& [position, chunk] : chunks)
 	{
-		//if (!it.second->isVisible(camera)) continue;
-		shaderProgram.setMatrix("model", Matrix::GetTranslation(it.first * 16));
-		it.second->renderWater();
+		shaderProgram.setMatrix("model", Matrix::GetTranslation(position * 16));
+		chunk->renderWater();
 	}
 }
 
@@ -292,26 +293,6 @@ void World::setBlocks(const std::unordered_map<Vector, std::unordered_map<Vector
 	pendingBlocksMutex.unlock();
 }
 
-//std::optional<unsigned char> World::getBlockAt(int x, int y, int z)
-//{
-//	if (y < 0) return {};
-//
-//	if (std::optional<const Chunk*> targetChunk = chunks.firstWhere([x, y, z](const Chunk* chunk) -> bool { return chunk->containsPosition(x, y, z); }))
-//	{
-//		return (*targetChunk)->getBlockAt((x % 16 + 16) % 16, (y % 16 + 16) % 16, (z % 16 + 16) % 16);
-//	}
-//	for (Chunk* chunk : chunks)
-//	{
-//		if (chunk->containsPosition(x, y, z))
-//		{
-//			//printf("mapping %d %d %d to %d %d %d \n", x, y, z, (x % 16 + 16) % 16, (y % 16 + 16) % 16, (z % 16 + 16) % 16);
-//			return chunk->getBlockAt((x % 16 + 16) % 16, (y % 16 + 16) % 16, (z % 16 + 16) % 16);
-//		}
-//	}
-//
-//	return {};
-//}
-
 Chunk* World::getChunkAt(const Vector& position)
 {
 	return getChunkAt(position.x, position.y, position.z);
@@ -330,7 +311,8 @@ Chunk* World::getChunkAt(int x, int y, int z)
 	}
 }
 
-std::unordered_map<Vector, unsigned char> World::exchangePendingBlocks(const Vector& chunkPosition, const std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>>& otherBlocks)
+std::unordered_map<Vector, unsigned char> World::exchangePendingBlocks(const Vector& chunkPosition,
+						const std::unordered_map<Vector, std::unordered_map<Vector, unsigned char>>& otherBlocks)
 {
 	pendingBlocksMutex.lock();
 
@@ -339,7 +321,10 @@ std::unordered_map<Vector, unsigned char> World::exchangePendingBlocks(const Vec
 
 	for (auto& [otherChunkPosition, otherChunkBlocks] : otherBlocks)
 	{
-		this->pendingBlocks[otherChunkPosition] = otherChunkBlocks;
+		for (auto& [blockPosition, blockID] : otherChunkBlocks)
+		{
+			this->pendingBlocks[otherChunkPosition][blockPosition] = blockID;
+		}
 	}
 
 	pendingBlocksMutex.unlock();
@@ -356,13 +341,14 @@ std::vector<Vector> World::getChunkPositionsToLoad() const
 	if (forTesting)
 	{
 		int testRadius = 8;
-		for (int x = -testRadius; x <= testRadius; x++)
-		{
-			for (int z = -testRadius; z <= testRadius; z++)
-			{
-				positions.push_back({ x, 0, z });
-			}
-		}
+		positions.push_back({ 0, 0, 0 });
+		//for (int x = 0; x <= CHUNKS_COUNT_TO_GENERATE; x++)
+		//{
+		//	for (int z = 0; z <= CHUNKS_COUNT_TO_GENERATE; z++)
+		//	{
+		//		positions.push_back({ x, 0, z });
+		//	}
+		//}
 	}
 	else
 	{

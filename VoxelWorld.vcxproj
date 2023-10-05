@@ -226,6 +226,7 @@
     <ClCompile Include="Src\world\mesh\BasicChunkMeshBuilder.cpp" />
     <ClCompile Include="Src\world\mesh\OptimalChunkMeshBuilder.cpp" />
     <ClCompile Include="Src\world\mesh\PerChunkOptimizedChunkMeshBuilder.cpp" />
+    <ClCompile Include="Src\world\terrain\3DNoiseExampleTerrainGeneratorr.cpp" />
     <ClCompile Include="Src\world\terrain\BiomeNoiseTerrainGenerator.cpp" />
     <ClCompile Include="Src\world\terrain\FirstWorkingTerrainGenerator.cpp" />
     <ClCompile Include="Src\world\terrain\MinecraftTerrainGenerator.cpp" />
@@ -294,6 +295,7 @@
     <None Include="Resources\shaders\skybox.vert" />
     <None Include="Resources\shaders\sun.frag" />
     <None Include="Resources\shaders\sun.vert" />
+    <None Include="Resources\shaders\temp.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dependencies\FAST_NOISE_LITE\include\FastNoiseLite.h" />
@@ -381,6 +383,7 @@
     <ClInclude Include="Src\world\mesh\ChunkMeshBuilder.h" />
     <ClInclude Include="Src\world\mesh\OptimalChunkMeshBuilder.h" />
     <ClInclude Include="Src\world\mesh\PerChunkOptimizedChunkMeshBuilder.h" />
+    <ClInclude Include="Src\world\terrain\3DNoiseExampleTerrainGeneratorr.h" />
     <ClInclude Include="Src\world\terrain\BiomeNoiseTerrainGenerator.h" />
     <ClInclude Include="Src\world\terrain\FirstWorkingTerrainGenerator.h" />
     <ClInclude Include="Src\world\terrain\MinecraftTerrainGenerator.h" />

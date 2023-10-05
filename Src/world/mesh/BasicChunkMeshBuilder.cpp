@@ -14,7 +14,7 @@ ChunkMesh* BasicChunkMeshBuilder::generateMesh(Chunk* chunk) const
 		{
 			for (int z = 0; z < CHUNK_WIDTH; z++)
 			{
-				unsigned char currentBlockID = chunk->blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z];
+				unsigned char currentBlockID = chunk->blocks[Chunk::coordsToOffset(x, y, z)];
 				if (currentBlockID == 0) continue;
 
 				Block& currentBlock = blockRegistry.getBlockByID(currentBlockID);

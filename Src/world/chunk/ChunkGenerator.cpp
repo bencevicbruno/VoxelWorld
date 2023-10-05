@@ -14,6 +14,7 @@
 #include "world/terrain/FirstWorkingTerrainGenerator.h"
 #include "world/terrain/BiomeNoiseTerrainGenerator.h"
 #include "world/terrain/MinecraftTerrainGenerator.h"
+#include "world/terrain/3DNoiseExampleTerrainGeneratorr.h"
 #include "world/decorator/LakeDecorator.h"
 #include "world/decorator/SurfaceBlockDecorator.h"
 #include "world/decorator/LakeSurfaceDecorator.h"
@@ -26,16 +27,24 @@ ChunkGenerator::ChunkGenerator(World* world, ChunkMesher* chunkMesher) :
 	world(world),
 	chunkMesher(chunkMesher),
 	shouldStop(false),
-	terrainGenerator(new MinecraftNoiseGenerator(world->getSeed()))
+	//terrainGenerator(new ThreeDNoiseExampleTerrainGenerator())
+	terrainGenerator(new FinalTerrainGenerator(world->getSeed()))
 {
-	int lakeLevel = 20;
+	if (ENABLE_DECORATIONS)
+	{
+		int lakeLevel = 20;
 
-	terrainDecorators.push_back(new LakeDecorator(lakeLevel));
-	terrainDecorators.push_back(new SurfaceBlockDecorator(seed, lakeLevel));
-	terrainDecorators.push_back(new LakeSurfaceDecorator(lakeLevel));
-	terrainDecorators.push_back(new ForestDecorator(seed, lakeLevel));
-	terrainDecorators.push_back(new SurfaceVegetationDecorator(seed));
-	terrainDecorators.push_back(new SpecialDecorator());
+		terrainDecorators.push_back(new LakeDecorator(lakeLevel));
+		terrainDecorators.push_back(new SurfaceBlockDecorator(seed, lakeLevel));
+
+		if (ENABLE_VEGETATION)
+		{
+			terrainDecorators.push_back(new LakeSurfaceDecorator(lakeLevel));
+			terrainDecorators.push_back(new ForestDecorator(seed, lakeLevel));
+			terrainDecorators.push_back(new SurfaceVegetationDecorator(seed));
+			terrainDecorators.push_back(new SpecialDecorator(lakeLevel));
+		}
+	}
 
 	for (int i = 0; i < GENERATORS_COUNT; i++)
 	{
@@ -131,7 +140,7 @@ void ChunkGenerator::generateTerrain(const Vector& chunkPosition)
 	std::unordered_map<Vector, unsigned char> pendingBlocks = world->exchangePendingBlocks(chunkPosition, neighbourDecorations);
 	for (auto& [position, blockID] : pendingBlocks)
 	{
-		blocks[int(position.y * CHUNK_WIDTH * CHUNK_WIDTH + position.x * CHUNK_WIDTH + position.z)] = blockID;
+		blocks[Chunk::coordsToOffset(position)] = blockID;
 	}
 
 	Chunk* newChunk = new Chunk(chunkPosition, world, blocks);

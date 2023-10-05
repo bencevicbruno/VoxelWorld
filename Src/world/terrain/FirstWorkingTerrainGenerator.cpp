@@ -34,29 +34,29 @@ unsigned char* FirstWorkingTerrainGenerator::generateTerrain(unsigned int seed, 
 
 				if (globalY > snowLevel && globalY <= height)
 				{
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = coverBlock == BLOCK_SAND ? BLOCK_STONE : BLOCK_SNOW;
+					blocks[Chunk::coordsToOffset(x, y, z)] = coverBlock == BLOCK_SAND ? BLOCK_STONE : BLOCK_SNOW;
 				}
 				else if (globalY == height)
 				{
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = (globalY < seaLevel&& coverBlock == BLOCK_GRASS) ? BLOCK_DIRT : coverBlock;
+					blocks[Chunk::coordsToOffset(x, y, z)] = (globalY < seaLevel&& coverBlock == BLOCK_GRASS) ? BLOCK_DIRT : coverBlock;
 				}
 				else if (globalY >= (height - 4) && globalY <= (height - 1))
 				{
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = coverBlock == BLOCK_SAND ? BLOCK_SAND : BLOCK_DIRT;
+					blocks[Chunk::coordsToOffset(x, y, z)] = coverBlock == BLOCK_SAND ? BLOCK_SAND : BLOCK_DIRT;
 				}
 				else if (globalY < (height - 4)) {
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = BLOCK_STONE;
+					blocks[Chunk::coordsToOffset(x, y, z)] = BLOCK_STONE;
 				}
 				else
 				{
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = BLOCK_AIR;
+					blocks[Chunk::coordsToOffset(x, y, z)] = BLOCK_AIR;
 				}
 
-				if ((globalY <= (seaLevel - 1)) && (blocks[x * 16 * 16 + z * 16 + y] == BLOCK_AIR)) {
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = BLOCK_WATER;
+				if ((globalY <= (seaLevel - 1)) && (blocks[Chunk::coordsToOffset(x, y, z)] == BLOCK_AIR)) {
+					blocks[Chunk::coordsToOffset(x, y, z)] = BLOCK_WATER;
 				}
-				else if ((globalY == seaLevel) && (blocks[x * 16 * 16 + z * 16 + y] == BLOCK_AIR)) {
-					blocks[y * CHUNK_WIDTH * CHUNK_WIDTH + x * CHUNK_WIDTH + z] = BLOCK_WATER_SURFACE;
+				else if ((globalY == seaLevel) && (blocks[Chunk::coordsToOffset(x, y, z)] == BLOCK_AIR)) {
+					blocks[Chunk::coordsToOffset(x, y, z)] = BLOCK_WATER_SURFACE;
 				}
 
 				double caveValue = caveGenerator.get(x, y, z);
